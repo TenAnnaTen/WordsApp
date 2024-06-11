@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Words</string>
+    <string name="categories_title">Категории</string>
+    <string name="placeholder">Поиск...</string>
+    <string name="my_categories">Мои</string>
+    <string name="public_categories">Общие</string>
+    <string name="add_categories">Добавить</string>
+    <string name="delete">Удалить</string>
+    <string name="exit">Выйти</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="delAlert">Вы действительно хотите удалить эту категорию?</string>
+    <string name="exitAlert">Вы действительно хотите выйти из этой категории?</string>
+    <string name="save">Сохранить</string>
+    <string name="dismiss">Отмена</string>
+    <string name="enterNameCategory">Введите название для новой категории</string>
+    <string name="loginIn">Войти</string>
+    <string name="loginOut">Зарегистрироваться</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="name">Имя пользователя</string>
+
+</resources>

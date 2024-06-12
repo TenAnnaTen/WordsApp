@@ -15,29 +15,27 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import com.example.words.R
 import com.example.words.data.model.Categories
+import com.example.words.ui.account.words.ViewModelWords
 import com.example.words.ui.navigation.DialogWithEditField
-import com.example.words.ui.navigation.TabRowScreen
 import com.example.words.ui.views.ListWithCategories
-import com.example.words.ui.views.ListWithPublicCategories
 
 @Composable
 fun ScreenCategories(
     modifier: Modifier = Modifier,
-    viewModel: ViewModelCategories = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: ViewModelCategories = androidx.lifecycle.viewmodel.compose.viewModel(),
+    navController: NavHostController
 ) {
+
+    val listCategories = viewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier
@@ -57,34 +55,35 @@ fun ScreenCategories(
 //            onClick = { viewModel.switchList() },
 //        )
 //        if (!viewModel.selectedTabIndex) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(600.dp)
-                    .padding(10.dp)
-            ){
-                ListWithCategories(
-                    categoriesList = viewModel.categoriesListResponse,
-                    viewModel
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(600.dp)
+                .padding(10.dp)
+        ) {
+            ListWithCategories(
+                categoriesList = listCategories.value.list,
+                viewModel,
+                navController
+            )
+            viewModel.getMyCategories()
+        }
+        Button(
+            onClick = {
+                viewModel.openDialog()
+            },
+        ) {
+            Row {
+                Icon(
+                    imageVector = Icons.Filled.Add,
+                    contentDescription = null
                 )
-                viewModel.getMyCategories()
+                Text(
+                    text = stringResource(id = R.string.add_categories),
+                    fontSize = 16.sp
+                )
             }
-            Button(
-                onClick = { 
-                       viewModel.openDialog()
-                },
-            ) {
-                Row {
-                    Icon(
-                        imageVector = Icons.Filled.Add,
-                        contentDescription = null
-                    )
-                    Text(
-                        text = stringResource(id = R.string.add_categories),
-                        fontSize = 16.sp
-                    )
-                }
-            }
+        }
 //        } else {
 //            ListWithPublicCategories(
 //                categoriesList = viewModel.categoriesListResponse,
@@ -93,7 +92,7 @@ fun ScreenCategories(
 //            viewModel.getPublicCategories()
 //        }
     }
-    if(viewModel.openAlertDialog){
+    if (viewModel.openAlertDialog) {
         DialogWithEditField(
             onDismissRequest = { viewModel.openDialog() },
             onConfirmation = {
@@ -105,7 +104,7 @@ fun ScreenCategories(
                 )
                 Log.d("MyLog", viewModel.enter)
                 viewModel.updateEnter("")
-                             },
+            },
             text = stringResource(id = R.string.enterNameCategory)
         )
     }

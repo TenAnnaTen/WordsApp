@@ -29,6 +29,9 @@ class ViewModelCategories : ViewModel() {
 //    private val _state = MutableStateFlow(User())
 //    val state = _state.asStateFlow()
 
+    private val _uiState = MutableStateFlow(CategoriesUiState())
+    val uiState = _uiState.asStateFlow()
+
     var enter by mutableStateOf("")
     var openAlertDialog by mutableStateOf(false)
 //    var selectedTabIndex by mutableStateOf(false)
@@ -57,6 +60,7 @@ class ViewModelCategories : ViewModel() {
                 Log.d("MyLog", e.toString())
                 Log.d("MyLog", accountStorage.getUserId().toString())
             }
+            _uiState.value = CategoriesUiState(list = categoriesListResponse)
         }
     }
 
@@ -99,6 +103,17 @@ class ViewModelCategories : ViewModel() {
 //            }
 //        }
 //    }
+
+    fun delCategory(categoryId: Int) {
+        viewModelScope.launch {
+            try {
+                categoriesRepository.delCategory(categoryId)
+            } catch (e: Exception) {
+                Log.d("MyLog", e.toString())
+            }
+            getMyCategories()
+        }
+    }
 
 //    fun getNameOwner(userId: Int){
 //        getUserById(userId)

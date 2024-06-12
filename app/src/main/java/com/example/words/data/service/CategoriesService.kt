@@ -3,6 +3,7 @@ package com.example.words.data.service
 import com.example.words.data.model.Categories
 import com.example.words.data.model.User
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -17,6 +18,9 @@ interface CategoriesService {
     @GET("user/{category_id}/users")
     suspend fun getUsersOfCategories(@Path("category_id") categoryId: Int): MutableList<User>
 
-    @GET("{user_id}/general/categories")
-    suspend fun getPublicCategories(@Path("user_id") userId: Int): MutableList<Categories>
+//    @GET("{user_id}/general/categories")
+//    suspend fun getPublicCategories(@Path("user_id") userId: Int): MutableList<Categories>
+
+    @DELETE("category/{category_id}")
+    suspend fun delCategory(@Path("category_id") categoryId: Int)
 }

@@ -18,7 +18,11 @@ class CategoriesRepository {
         return RetrofitInstance.categoriesService.getUsersOfCategories(categoryId)
     }
 
-    suspend fun getPublicCategories(userId: Int): MutableList<Categories> {
-        return RetrofitInstance.categoriesService.getPublicCategories(userId)
+//    suspend fun getPublicCategories(userId: Int): MutableList<Categories> {
+//        return RetrofitInstance.categoriesService.getPublicCategories(userId)
+//    }
+
+    suspend fun delCategory(categoryId: Int) {
+        return RetrofitInstance.categoriesService.delCategory(categoryId)
     }
 }

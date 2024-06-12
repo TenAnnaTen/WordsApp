@@ -19,5 +19,10 @@
     <string name="login">Логин</string>
     <string name="password">Пароль</string>
     <string name="name">Имя пользователя</string>
+    <string name="enterMainLanguage">Слово на изучаемом языке</string>
+    <string name="enterSecondLanguage">Перевод</string>
+    <string name="enterTranscription">Транскрипция</string>
+    <string name="otmena">Отмена</string>
+    <string name="update">Сохранить изменения</string>
 
 </resources>

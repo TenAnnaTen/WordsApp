@@ -2,6 +2,7 @@ package com.example.words.data
 
 import com.example.words.data.service.AccountService
 import com.example.words.data.service.CategoriesService
+import com.example.words.data.service.WordsService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.create
@@ -22,5 +23,8 @@ object RetrofitInstance {
 
     val categoriesService: CategoriesService by lazy {
         retrofit.create(CategoriesService::class.java)
+    }
+    val wordsService: WordsService by lazy {
+        retrofit.create(WordsService::class.java)
     }
 }

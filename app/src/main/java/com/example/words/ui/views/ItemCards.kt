@@ -193,7 +193,8 @@ fun MyCategories(
 @Composable
 fun WordsCard(
     word: Word,
-    viewModel: ViewModelWords
+    viewModel: ViewModelWords,
+    categoryId: Int
 ) {
     val isExpanded = viewModel.expandedCards[word.id] ?: false
 
@@ -219,12 +220,14 @@ fun WordsCard(
                 if (word.main_language.isNullOrEmpty()) {
                     NewWordField(
                         viewModel,
-                        word.id!!
+                        word.id!!,
+                        categoryId
                     )
                 } else {
                     UpdateFieldWord(
-                        word,
+                        word.id!!,
                         viewModel,
+                        categoryId,
                         word.main_language,
                         word.second_language!!,
                         word.transcription!!
@@ -297,13 +300,12 @@ private fun EditTextWords(
 }
 
 @Composable
-private fun NewWordField(viewModel: ViewModelWords, wordId: Int) {
+private fun NewWordField(viewModel: ViewModelWords, wordId: Int, categoryId: Int) {
     Column {
         ButtonRow(
-            saveAction = {
-                         viewModel.updateWord(wordId)
-                         },
-            cancelAction = { /*TODO*/ },
+            wordId,
+            viewModel,
+            categoryId,
             isUpdate = false
         )
         EditList(
@@ -317,16 +319,18 @@ private fun NewWordField(viewModel: ViewModelWords, wordId: Int) {
 
 @Composable
 private fun UpdateFieldWord(
-    word: Word,
+    wordId: Int,
     viewModel: ViewModelWords,
+    categoryId: Int,
     placeholder1: String?,
     placeholder2: String?,
     placeholder3: String?,
 ) {
     Column {
         ButtonRow(
-            saveAction = { /*TODO*/ },
-            cancelAction = { /*TODO*/ },
+            wordId,
+            viewModel,
+            categoryId,
             isUpdate = true
         )
         EditList(
@@ -340,10 +344,9 @@ private fun UpdateFieldWord(
 
 @Composable
 private fun ButtonRow(
-    saveAction: () -> Unit = {},
-    cancelAction: () -> Unit = {},
-    updateAction: () -> Unit = {},
-    deleteAction: () -> Unit = {},
+    wordId: Int,
+    viewModel: ViewModelWords,
+    categoryId: Int,
     isUpdate: Boolean
 ) {
     Row(
@@ -355,7 +358,10 @@ private fun ButtonRow(
         Column {
             if (isUpdate) {
                 Button(
-                    onClick = updateAction,
+                    onClick = {
+                        viewModel.updateWord(wordId)
+                        viewModel.getWordsOfCategory(categoryId)
+                              },
                     modifier = Modifier
                         .height(50.dp)
                         .width(200.dp)
@@ -364,7 +370,10 @@ private fun ButtonRow(
                     Text(text = stringResource(id = R.string.update))
                 }
                 Button(
-                    onClick = deleteAction,
+                    onClick = {
+                        viewModel.deleteWord(wordId)
+                        viewModel.getWordsOfCategory(categoryId)
+                              },
                     modifier = Modifier
                         .height(50.dp)
                         .width(200.dp)
@@ -374,7 +383,10 @@ private fun ButtonRow(
                 }
             } else {
                 Button(
-                    onClick = saveAction,
+                    onClick = {
+                        viewModel.updateWord(wordId)
+                        viewModel.getWordsOfCategory(categoryId)
+                    },
                     modifier = Modifier
                         .height(50.dp)
                         .width(120.dp)
@@ -383,7 +395,10 @@ private fun ButtonRow(
                     Text(text = stringResource(id = R.string.save))
                 }
                 Button(
-                    onClick = cancelAction,
+                    onClick = {
+                        viewModel.deleteWord(wordId)
+                        viewModel.getWordsOfCategory(categoryId)
+                    },
                     modifier = Modifier
                         .height(50.dp)
                         .width(120.dp)
@@ -432,8 +447,8 @@ private fun EditList(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    WordsCard(word = Word(1, "Watermelon", "Арбуз", "Ватермелон"), viewModel = ViewModelWords())
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    WordsCard(word = Word(1, "Watermelon", "Арбуз", "Ватермелон"), viewModel = ViewModelWords())
+//}

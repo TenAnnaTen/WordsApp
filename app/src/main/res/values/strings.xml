@@ -24,5 +24,6 @@
     <string name="enterTranscription">Транскрипция</string>
     <string name="otmena">Отмена</string>
     <string name="update">Сохранить изменения</string>
+    <string name="updateNameCategory">Введите новое название для категории</string>
 
 </resources>

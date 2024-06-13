@@ -3,6 +3,7 @@ package com.example.words.data.repository
 import com.example.words.data.RetrofitInstance
 import com.example.words.data.model.Categories
 import com.example.words.data.model.User
+import retrofit2.Response
 
 class CategoriesRepository {
 
@@ -24,5 +25,9 @@ class CategoriesRepository {
 
     suspend fun delCategory(categoryId: Int) {
         return RetrofitInstance.categoriesService.delCategory(categoryId)
+    }
+
+    suspend fun updateNameCategory(categoryId: Int, categories: Categories): Response<Categories> {
+        return RetrofitInstance.categoriesService.updateNameCategory(categories, categoryId)
     }
 }

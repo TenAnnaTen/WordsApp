@@ -12,6 +12,7 @@ import com.example.words.data.model.idState
 import com.example.words.data.repository.AccountRepository
 import com.example.words.data.repository.CategoriesRepository
 import com.example.words.data.storage.AccountStorage
+import com.example.words.ui.account.words.ScreenWordsUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -32,6 +33,9 @@ class ViewModelCategories : ViewModel() {
     private val _uiState = MutableStateFlow(CategoriesUiState())
     val uiState = _uiState.asStateFlow()
 
+    private val _wordUiState = MutableStateFlow(ScreenWordsUiState())
+    val wordUiState = _wordUiState.asStateFlow()
+
     var enter by mutableStateOf("")
     var openAlertDialog by mutableStateOf(false)
 //    var selectedTabIndex by mutableStateOf(false)
@@ -45,7 +49,7 @@ class ViewModelCategories : ViewModel() {
                 )
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
-                Log.d("MyLog", accountStorage.getUserId().toString())
+//                Log.d("MyLog", accountStorage.getUserId().toString())
             }
             getMyCategories()
         }
@@ -58,7 +62,7 @@ class ViewModelCategories : ViewModel() {
                 categoriesListResponse = response
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
-                Log.d("MyLog", accountStorage.getUserId().toString())
+//                Log.d("MyLog", accountStorage.getUserId().toString())
             }
             _uiState.value = CategoriesUiState(list = categoriesListResponse)
         }
@@ -69,7 +73,7 @@ class ViewModelCategories : ViewModel() {
             try {
                 val response = categoriesRepository.getUsersOfCategories(categoryId)
                 usersListResponse = response
-                Log.d("MyLog", usersListResponse[0].toString())
+//                Log.d("MyLog", usersListResponse[0].toString())
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
             }
@@ -115,12 +119,32 @@ class ViewModelCategories : ViewModel() {
         }
     }
 
+    fun updateCategoryName(categoryId: Int, category: Categories) {
+        viewModelScope.launch {
+            try {
+                Log.d("MyLog", "Updating category with ID: $categoryId and data: ${category.category_name}")
+                _wordUiState.value = ScreenWordsUiState(category.category_name!!)
+                val response = categoriesRepository.updateNameCategory(categoryId, category)
+                if (response.isSuccessful) {
+                    Log.d("MyLog", "Category updated successfully")
+                } else {
+                    Log.d("MyLog", "Error updating category: ${response.errorBody()?.string()}")
+                }
+            } catch (e: Exception) {
+                Log.d("MyLog", "Exception: $e")
+                Log.d("MyLog", "CategoryId: $categoryId")
+                Log.d("MyLog", "CategoryName: ${category.category_name}")
+            }
+        }
+    }
+
 //    fun getNameOwner(userId: Int){
 //        getUserById(userId)
 //    }
 
     fun updateEnter(enter: String) {
         this.enter = enter
+        Log.d("MyLog", "enter: ${this.enter}")
     }
 
 //    fun switchList() {

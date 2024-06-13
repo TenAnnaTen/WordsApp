@@ -20,6 +20,9 @@ class ViewModelWords: ViewModel() {
     private val _expandedCards = mutableStateMapOf<Int, Boolean>()
     val expandedCards = _expandedCards
 
+    var dialog by mutableStateOf(false)
+        private set
+
     var mainLanguage by mutableStateOf("")
         private set
 
@@ -32,8 +35,8 @@ class ViewModelWords: ViewModel() {
         viewModelScope.launch {
             try {
                 wordsListResponse = wordsRepository.getWordsOfCategory(categoryId)
-                Log.d("MyLog", wordsListResponse.toString() + "wr")
-                Log.d("MyLog", wordsRepository.getWordsOfCategory(categoryId).toString() + "get")
+//                Log.d("MyLog", wordsListResponse.toString() + "wr")
+//                Log.d("MyLog", wordsRepository.getWordsOfCategory(categoryId).toString() + "get")
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
             }
@@ -50,13 +53,20 @@ class ViewModelWords: ViewModel() {
                 ))
                 if (response.body()?.id != null) {
                     updateCard(response.body()?.id!!)
-                    Log.d("MyLog", "+")
+//                    Log.d("MyLog", "+")
                 }
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
             }
             getWordsOfCategory(categoryId)
+            reset()
         }
+    }
+
+    private fun reset() {
+        updateEnterMainLanguage("")
+        updateEnterSecondLanguage("")
+        updateTranscription("")
     }
 
     fun updateWord(wordId: Int) {
@@ -71,6 +81,16 @@ class ViewModelWords: ViewModel() {
                     wordId
                 )
                 updateCard(wordId)
+                reset()
+            } catch (e: Exception) {
+                Log.d("MyLog", e.toString())
+            }
+        }
+    }
+    fun deleteWord(wordId: Int) {
+        viewModelScope.launch {
+            try {
+                wordsRepository.deleteWord(wordId)
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
             }
@@ -89,6 +109,10 @@ class ViewModelWords: ViewModel() {
     }
     fun updateTranscription(string: String) {
         transcription = string
+    }
+
+    fun openCloseDialog(){
+        dialog = !dialog
     }
 
 }

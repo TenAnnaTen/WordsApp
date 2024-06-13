@@ -2,10 +2,12 @@ package com.example.words.data.service
 
 import com.example.words.data.model.Categories
 import com.example.words.data.model.User
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface CategoriesService {
@@ -23,4 +25,7 @@ interface CategoriesService {
 
     @DELETE("category/{category_id}")
     suspend fun delCategory(@Path("category_id") categoryId: Int)
+
+    @PUT("category/{category_id}")
+    suspend fun updateNameCategory(@Body request: Categories, @Path("category_id") categoryId: Int): Response<Categories>
 }

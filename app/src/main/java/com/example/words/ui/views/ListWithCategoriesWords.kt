@@ -29,13 +29,14 @@ fun ListWithCategories(
 @Composable
 fun ListWithWords(
     wordsList: MutableList<Word>,
-    viewModel: ViewModelWords
+    viewModel: ViewModelWords,
+    categoryId: Int
 ){
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 5.dp, vertical = 8.dp)
     ) {
             itemsIndexed(items = wordsList) {_, item ->
-                WordsCard(word = item, viewModel = viewModel)
+                WordsCard(word = item, viewModel = viewModel, categoryId)
             }
     }
 }

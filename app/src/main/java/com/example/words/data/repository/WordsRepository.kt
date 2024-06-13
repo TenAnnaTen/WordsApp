@@ -17,4 +17,9 @@ class WordsRepository {
     suspend fun update(word: Word, wordId: Int) {
         return RetrofitInstance.wordsService.updateWord(word, wordId)
     }
+
+    suspend fun deleteWord(wordId: Int){
+        return RetrofitInstance.wordsService.deleteWord(wordId)
+    }
+
 }

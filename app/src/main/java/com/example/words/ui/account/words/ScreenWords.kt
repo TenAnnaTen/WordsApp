@@ -1,5 +1,7 @@
 package com.example.words.ui.account.words
 
+import android.util.Log
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,22 +24,28 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
 import com.example.words.R
+import com.example.words.data.model.Categories
+import com.example.words.ui.account.categories.ViewModelCategories
+import com.example.words.ui.navigation.DialogWithEditField
 import com.example.words.ui.views.ListWithWords
 
 @Composable
 fun ScreenWords(
     modifier: Modifier = Modifier,
     viewModel: ViewModelWords = viewModel(),
+    viewModelCategories: ViewModelCategories,
     categoryId: Int,
-    categoryName: String
+    categoryName: String,
+    navController: NavHostController
 ) {
+
+    val nameCategory = viewModelCategories.wordUiState.collectAsState()
 
     Column(
         modifier = modifier
@@ -52,7 +60,10 @@ fun ScreenWords(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(
+                onClick = {
+                    navController.navigateUp()
+            }) {
                 Icon(
                     imageVector = Icons.Filled.KeyboardArrowLeft,
                     contentDescription = null,
@@ -62,10 +73,13 @@ fun ScreenWords(
             }
             Spacer(modifier = modifier.width(90.dp))
             Text(
-                text = categoryName,
+                text = if (nameCategory.value.title.isNotEmpty()) nameCategory.value.title else categoryName,
                 fontSize = 26.sp,
                 modifier = modifier
                     .padding(vertical = 20.dp)
+                    .clickable {
+                        viewModel.openCloseDialog()
+                    }
             )
         }
         Box(
@@ -76,13 +90,14 @@ fun ScreenWords(
         ) {
             ListWithWords(
                 wordsList = viewModel.wordsListResponse,
-                viewModel = viewModel
+                viewModel = viewModel,
+                categoryId
             )
             viewModel.getWordsOfCategory(categoryId)
         }
         Button(
             onClick = {
-                      viewModel.addWord(categoryId)
+                viewModel.addWord(categoryId)
             },
         ) {
             Row {
@@ -96,6 +111,25 @@ fun ScreenWords(
                 )
             }
         }
+    }
+    if (viewModel.dialog) {
+        DialogWithEditField(
+            onDismissRequest = { viewModel.openCloseDialog() },
+            onConfirmation = {
+                val categoryNam = viewModelCategories.enter
+                if (categoryNam.isNotEmpty()) {
+                    viewModel.openCloseDialog()
+                    viewModelCategories.updateCategoryName(
+                        categoryId,
+                        Categories(category_name = categoryNam)
+                    )
+                } else {
+                    Log.d("MyLog", "Category name cannot be empty")
+                }
+            },
+            viewModel = viewModelCategories,
+            text = stringResource(id = R.string.updateNameCategory)
+        )
     }
 }
 

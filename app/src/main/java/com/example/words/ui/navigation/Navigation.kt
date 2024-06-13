@@ -10,6 +10,7 @@ import com.example.words.ui.account.autorization.SignIn
 import com.example.words.ui.account.autorization.SignUp
 import com.example.words.ui.account.autorization.ViewModelAutorization
 import com.example.words.ui.account.categories.ScreenCategories
+import com.example.words.ui.account.categories.ViewModelCategories
 import com.example.words.ui.account.words.ScreenWords
 import com.example.words.ui.account.words.ViewModelWords
 import com.example.words.ui.welcome.ScreenWelcome
@@ -50,8 +51,10 @@ fun Navigation(
             val categoryName = backStackEntry.arguments?.getString("categories.category_name")
             Log.d("MyLog", categoryId.toString())
             ScreenWords(
+                viewModelCategories = ViewModelCategories(),
                 categoryId = categoryId?.toInt() ?: 0,
-                categoryName = categoryName ?: ""
+                categoryName = categoryName ?: "",
+                navController = navController
             )
         }
     }

@@ -3,6 +3,7 @@ package com.example.words.data.service
 import com.example.words.data.model.Word
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -18,4 +19,8 @@ interface WordsService {
 
     @PUT("word/{word_id}")
     suspend fun updateWord(@Body request: Word, @Path("word_id") wordId: Int)
+
+    @DELETE("word/{word_id}")
+    suspend fun deleteWord(@Path("word_id") wordId: Int)
+
 }

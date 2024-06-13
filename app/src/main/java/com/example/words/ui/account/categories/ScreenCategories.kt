@@ -103,8 +103,9 @@ fun ScreenCategories(
                     )
                 )
                 Log.d("MyLog", viewModel.enter)
-                viewModel.updateEnter("")
+//                viewModel.updateEnter("")
             },
+            viewModel = viewModel,
             text = stringResource(id = R.string.enterNameCategory)
         )
     }

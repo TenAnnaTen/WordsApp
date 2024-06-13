@@ -16,6 +16,10 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -54,8 +58,11 @@ fun DialogWithEditField(
     onDismissRequest: () -> Unit,
     onConfirmation: () -> Unit,
     text: String,
-    viewModel: ViewModelCategories = viewModel()
+    viewModel: ViewModelCategories
 ) {
+
+    var textFieldValue by remember { mutableStateOf(viewModel.enter) }
+
     Dialog(
         onDismissRequest = { onDismissRequest() }
     ) {
@@ -77,8 +84,11 @@ fun DialogWithEditField(
                 modifier = Modifier.padding(16.dp),
             )
                 TextField(
-                    value = viewModel.enter,
-                    onValueChange = { viewModel.updateEnter(it) },
+                    value = textFieldValue,
+                    onValueChange = {
+                        textFieldValue = it
+                        viewModel.updateEnter(it)
+                                    },
                     modifier = Modifier.width(200.dp)
                 )
                 Row(

@@ -33,7 +33,7 @@ import com.example.words.ui.navigation.ScreenRoute
 @Composable
 fun SignIn(
     navController: NavHostController,
-    viewModel: ViewModelAutorization = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: ViewModelAutorization
 ){
 
     Column(
@@ -92,7 +92,7 @@ fun SignIn(
 @Composable
 fun SignUp(
     navController: NavHostController,
-    viewModel: ViewModelAutorization = androidx.lifecycle.viewmodel.compose.viewModel()
+    viewModel: ViewModelAutorization
 ){
     Column(
         verticalArrangement = Arrangement.Center,

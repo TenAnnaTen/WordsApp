@@ -31,7 +31,7 @@ import com.example.words.ui.views.ListWithCategories
 @Composable
 fun ScreenCategories(
     modifier: Modifier = Modifier,
-    viewModel: ViewModelCategories = androidx.lifecycle.viewmodel.compose.viewModel(),
+    viewModel: ViewModelCategories,
     navController: NavHostController
 ) {
 

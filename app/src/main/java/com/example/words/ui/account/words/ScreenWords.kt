@@ -38,7 +38,7 @@ import com.example.words.ui.views.ListWithWords
 @Composable
 fun ScreenWords(
     modifier: Modifier = Modifier,
-    viewModel: ViewModelWords = viewModel(),
+    viewModel: ViewModelWords,
     viewModelCategories: ViewModelCategories,
     categoryId: Int,
     categoryName: String,

@@ -1,6 +1,7 @@
 package com.example.words.ui.navigation
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.util.Log
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -15,6 +16,8 @@ import com.example.words.ui.account.categories.ScreenCategories
 import com.example.words.ui.account.categories.ViewModelCategories
 import com.example.words.ui.account.learning.ScreenLearning
 import com.example.words.ui.account.learning.ViewModelLearning
+import com.example.words.ui.account.settings.ScreenSettings
+import com.example.words.ui.account.settings.ScreenSettingsViewModel
 import com.example.words.ui.account.words.ScreenWords
 import com.example.words.ui.account.words.ViewModelWords
 import com.example.words.ui.welcome.ScreenWelcome
@@ -22,13 +25,16 @@ import com.example.words.ui.welcome.ScreenWelcome
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Navigation(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModelSettings: ScreenSettingsViewModel,
+    context: Context
 ) {
 
     val viewModelWords = ViewModelWords()
     val viewModelCategories = ViewModelCategories()
     val viewModelAutorization = ViewModelAutorization(navController)
     val viewModelLearning = ViewModelLearning()
+//    val viewModelSettings = ScreenSettingsViewModel()
 
     val backStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = backStackEntry.value?.destination?.route
@@ -51,19 +57,22 @@ fun Navigation(
             composable(ScreenRoute.ScreenCategories.name) {
                 ScreenCategories(
                     navController = navController,
-                    viewModel = viewModelCategories
+                    viewModel = viewModelCategories,
+                    context = context
                 )
             }
             composable(ScreenRoute.ScreenLoginIn.name) {
                 SignIn(
                     navController,
-                    viewModelAutorization
+                    viewModelAutorization,
+                    context
                 )
             }
             composable(ScreenRoute.ScreenLoginOut.name) {
                 SignUp(
                     navController,
-                    viewModelAutorization
+                    viewModelAutorization,
+                    context
                 )
             }
             composable(ScreenRoute.ScreenWords.name + "/{categories.id}/{categories.category_name}") {backStackEntry ->
@@ -75,7 +84,8 @@ fun Navigation(
                     viewModelCategories = viewModelCategories,
                     categoryId = categoryId?.toInt() ?: 0,
                     categoryName = categoryName ?: "",
-                    navController = navController
+                    navController = navController,
+                    context = context
                 )
             }
             composable(ScreenRoute.ScreenLearning.name) {
@@ -83,6 +93,13 @@ fun Navigation(
                     viewModelLearning = viewModelLearning,
                     viewModelCategories = viewModelCategories,
                     viewModelWords = viewModelWords
+                )
+            }
+            composable(ScreenRoute.ScreenSettings.name) {
+                ScreenSettings(
+                    viewModelSettings = viewModelSettings,
+                    viewModelCategories =  viewModelCategories,
+                    navController = navController
                 )
             }
         }

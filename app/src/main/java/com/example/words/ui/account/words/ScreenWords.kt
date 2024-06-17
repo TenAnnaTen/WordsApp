@@ -1,6 +1,8 @@
 package com.example.words.ui.account.words
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -42,7 +44,8 @@ fun ScreenWords(
     viewModelCategories: ViewModelCategories,
     categoryId: Int,
     categoryName: String,
-    navController: NavHostController
+    navController: NavHostController,
+    context: Context
 ) {
 
     val nameCategory = viewModelCategories.wordUiState.collectAsState()
@@ -91,7 +94,8 @@ fun ScreenWords(
             ListWithWords(
                 wordsList = viewModel.wordsListResponse,
                 viewModel = viewModel,
-                categoryId
+                categoryId,
+                context
             )
             viewModel.getWordsOfCategory(categoryId)
         }
@@ -124,7 +128,7 @@ fun ScreenWords(
                         Categories(category_name = categoryNam)
                     )
                 } else {
-                    Log.d("MyLog", "Category name cannot be empty")
+                    Toast.makeText(context, "азвание не может быть пустым", Toast.LENGTH_LONG).show()
                 }
             },
             viewModel = viewModelCategories,

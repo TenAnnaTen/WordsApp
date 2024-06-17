@@ -89,6 +89,7 @@ fun DialogWithEditField(
                         textFieldValue = it
                         viewModel.updateEnter(it)
                                     },
+                    singleLine = true,
                     modifier = Modifier.width(200.dp)
                 )
                 Row(

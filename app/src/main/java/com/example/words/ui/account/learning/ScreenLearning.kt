@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.words.ui.account.categories.ViewModelCategories
 import com.example.words.ui.account.words.ViewModelWords
 
@@ -108,7 +109,10 @@ private fun FrontSide(
                 .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            Text(text = text)
+            Text(
+                text = text,
+                fontSize = 24.sp
+            )
         }
     }
 }
@@ -129,8 +133,14 @@ private fun BackSide(
             contentAlignment = Alignment.Center
         ) {
             Column {
-                Text(text = text1)
-                Text(text = "[$text2]")
+                Text(
+                    text = text1,
+                    fontSize = 24.sp
+                )
+                Text(
+                    text = "[$text2]",
+                    fontSize = 18.sp
+                )
             }
         }
     }

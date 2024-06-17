@@ -1,6 +1,8 @@
 package com.example.words.ui.account.autorization
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -35,7 +37,9 @@ class ViewModelAutorization(
     var name by mutableStateOf("")
         private set
 
-    fun signUp(user: User) {
+    var showPassword by mutableStateOf(false)
+        private set
+    fun signUp(user: User, context: Context) {
         viewModelScope.launch {
             try {
                 val response = accountRepository.signUp(user)
@@ -45,7 +49,7 @@ class ViewModelAutorization(
                     _state.update { it.copy(id = userId) }
                     if (userId != null) accountStorage.saveUserId(userId)
                 } else {
-                    //Такого нет
+                    Toast.makeText(context, "Пользователь с таким логином уже существует", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
@@ -53,7 +57,7 @@ class ViewModelAutorization(
         }
     }
 
-    fun signIn(user: User) {
+    fun signIn(user: User, context: Context) {
         viewModelScope.launch {
             try {
                 val response = accountRepository.signIn(user)
@@ -63,7 +67,7 @@ class ViewModelAutorization(
                     _state.update { it.copy(id = userId) }
                     if (userId != null) accountStorage.saveUserId(userId)
                 } else {
-                    //Такого нет
+                    Toast.makeText(context, "Такого пользователя не существует", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
@@ -80,5 +84,9 @@ class ViewModelAutorization(
     }
     fun updateEnterName(name: String){
         this.name = name
+    }
+
+    fun showPassword(show: Boolean) {
+        showPassword = show
     }
 }

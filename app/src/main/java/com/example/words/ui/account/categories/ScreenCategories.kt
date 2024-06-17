@@ -1,6 +1,8 @@
 package com.example.words.ui.account.categories
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,7 +34,8 @@ import com.example.words.ui.views.ListWithCategories
 fun ScreenCategories(
     modifier: Modifier = Modifier,
     viewModel: ViewModelCategories,
-    navController: NavHostController
+    navController: NavHostController,
+    context: Context
 ) {
 
     val listCategories = viewModel.uiState.collectAsState()
@@ -96,14 +99,16 @@ fun ScreenCategories(
         DialogWithEditField(
             onDismissRequest = { viewModel.openDialog() },
             onConfirmation = {
-                viewModel.openDialog()
-                viewModel.addCategory(
-                    Categories(
-                        category_name = viewModel.enter
+                if (viewModel.enter.replace(" ", "").isEmpty()) {
+                    Toast.makeText(context, "Название не может быть пустым", Toast.LENGTH_LONG).show()
+                } else {
+                    viewModel.openDialog()
+                    viewModel.addCategory(
+                        Categories(
+                            category_name = viewModel.enter
+                        )
                     )
-                )
-                Log.d("MyLog", viewModel.enter)
-//                viewModel.updateEnter("")
+                }
             },
             viewModel = viewModel,
             text = stringResource(id = R.string.enterNameCategory)

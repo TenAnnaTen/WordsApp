@@ -36,7 +36,8 @@ fun BottomNavigation(
 ) {
     val listItems = listOf(
         BottomBarItem.Screen1,
-        BottomBarItem.Screen2
+        BottomBarItem.Screen2,
+        BottomBarItem.Screen3
     )
     Row(
         horizontalArrangement = Arrangement.Center,
@@ -51,7 +52,7 @@ fun BottomNavigation(
             NavigationBar(
                 containerColor = Color.Transparent,
                 modifier = Modifier
-                    .width(200.dp)
+                    .width(250.dp)
                     .clip(RoundedCornerShape(10.dp))
             ) {
                 val backStackEntry by navController.currentBackStackEntryAsState()

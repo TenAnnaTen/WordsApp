@@ -9,4 +9,5 @@ sealed class BottomBarItem(
 ) {
     object Screen1: BottomBarItem(R.drawable.learning, ScreenRoute.ScreenLearning.name)
     object Screen2: BottomBarItem(R.drawable.list, ScreenRoute.ScreenCategories.name)
+    object Screen3: BottomBarItem(R.drawable.settings, ScreenRoute.ScreenSettings.name)
 }

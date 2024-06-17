@@ -1,5 +1,6 @@
 package com.example.words.ui.views
 
+import android.content.Context
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -30,13 +31,14 @@ fun ListWithCategories(
 fun ListWithWords(
     wordsList: MutableList<Word>,
     viewModel: ViewModelWords,
-    categoryId: Int
+    categoryId: Int,
+    context: Context
 ){
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 5.dp, vertical = 8.dp)
     ) {
             itemsIndexed(items = wordsList) {_, item ->
-                WordsCard(word = item, viewModel = viewModel, categoryId)
+                WordsCard(word = item, viewModel = viewModel, categoryId, context)
             }
     }
 }

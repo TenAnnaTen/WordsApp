@@ -35,8 +35,6 @@ class ViewModelWords: ViewModel() {
         viewModelScope.launch {
             try {
                 wordsListResponse = wordsRepository.getWordsOfCategory(categoryId)
-//                Log.d("MyLog", wordsListResponse.toString() + "wr")
-//                Log.d("MyLog", wordsRepository.getWordsOfCategory(categoryId).toString() + "get")
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
             }
@@ -53,7 +51,6 @@ class ViewModelWords: ViewModel() {
                 ))
                 if (response.body()?.id != null) {
                     updateCard(response.body()?.id!!)
-//                    Log.d("MyLog", "+")
                 }
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
@@ -69,7 +66,7 @@ class ViewModelWords: ViewModel() {
         updateTranscription("")
     }
 
-    fun updateWord(wordId: Int) {
+    fun updateWord(wordId: Int, categoryId: Int) {
         viewModelScope.launch {
             try {
                 wordsRepository.update(
@@ -85,6 +82,7 @@ class ViewModelWords: ViewModel() {
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
             }
+            getWordsOfCategory(categoryId)
         }
     }
     fun deleteWord(wordId: Int) {

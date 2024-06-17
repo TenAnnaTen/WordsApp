@@ -18,4 +18,12 @@ class AccountRepository {
         return RetrofitInstance.accountService.getUserById(userId)
     }
 
+    suspend fun updateUser(user: User, userId: Int) {
+        return RetrofitInstance.accountService.updateUser(user, userId)
+    }
+
+    suspend fun deleteUser(userId: Int) {
+        return RetrofitInstance.accountService.deleteAccount(userId)
+    }
+
 }

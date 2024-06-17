@@ -25,5 +25,14 @@
     <string name="otmena">Отмена</string>
     <string name="update">Сохранить изменения</string>
     <string name="updateNameCategory">Введите новое название для категории</string>
+    <string name="lightDark">Цвет темы</string>
+    <string name="light">Светлая тема</string>
+    <string name="Dark">Темная тема</string>
+    <string name="account">Настройки аккаунта</string>
+    <string name="accountChange">Изменить имя</string>
+    <string name="accountDelete">Удалить профиль</string>
+    <string name="accountExit">Выйти из профиля</string>
+    <string name="nameChange">Введите новое имя пользователя</string>
+    <string name="hidePassword">Спрятать пароль</string>
 
 </resources>

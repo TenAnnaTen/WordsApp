@@ -1,6 +1,7 @@
 package com.example.words.ui.views
 
-import android.util.Log
+import android.content.Context
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.OutlinedTextField
@@ -27,12 +29,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.compose.inversePrimaryLight
+import com.example.compose.primaryLight
 import com.example.words.R
 import com.example.words.data.model.Categories
 import com.example.words.data.model.Word
@@ -194,7 +200,8 @@ fun MyCategories(
 fun WordsCard(
     word: Word,
     viewModel: ViewModelWords,
-    categoryId: Int
+    categoryId: Int,
+    context: Context
 ) {
     val isExpanded = viewModel.expandedCards[word.id] ?: false
 
@@ -204,7 +211,10 @@ fun WordsCard(
             .padding(10.dp)
             .animateContentSize()
             .height(if (isExpanded) 500.dp else 140.dp)
-            .clickable { viewModel.updateCard(word.id!!) }
+            .clickable {
+                viewModel.updateCard(word.id!!)
+                viewModel.getWordsOfCategory(categoryId)
+            }
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -221,7 +231,8 @@ fun WordsCard(
                     NewWordField(
                         viewModel,
                         word.id!!,
-                        categoryId
+                        categoryId,
+                        context
                     )
                 } else {
                     UpdateFieldWord(
@@ -230,7 +241,8 @@ fun WordsCard(
                         categoryId,
                         word.main_language,
                         word.second_language!!,
-                        word.transcription!!
+                        word.transcription!!,
+                        context
                     )
                 }
             }
@@ -243,14 +255,14 @@ private fun CirclesWithInitial(initial: String) {
     Box(modifier = Modifier.size(45.dp)) {
         CircleWithInitial(
             initial = initial,
-            color = androidx.compose.ui.graphics.Color.Red,
+            color = primaryLight,
             modifier = Modifier
                 .size(35.dp)
                 .align(Alignment.CenterEnd)
         )
         CircleWithInitial(
             initial = initial,
-            color = androidx.compose.ui.graphics.Color.Magenta,
+            color = inversePrimaryLight,
             modifier = Modifier
                 .size(35.dp)
                 .align(Alignment.CenterStart)
@@ -263,7 +275,7 @@ private fun CirclesWithInitial(initial: String) {
 private fun CircleWithInitial(
     initial: String,
     modifier: Modifier = Modifier,
-    color: androidx.compose.ui.graphics.Color
+    color: Color
 ) {
     Box(
         modifier = modifier
@@ -274,7 +286,8 @@ private fun CircleWithInitial(
         Text(
             text = initial,
             fontSize = 14.sp,
-            fontWeight = FontWeight.Bold
+            fontWeight = FontWeight.Bold,
+            color = Color.Black
         )
     }
 }
@@ -284,7 +297,8 @@ private fun EditTextWords(
     text: String,
     onChange: (String) -> Unit,
     @StringRes label: Int,
-    placeholder: String?
+    placeholder: String?,
+    imeAction: ImeAction
 ) {
     OutlinedTextField(
         value = text,
@@ -295,12 +309,20 @@ private fun EditTextWords(
             Text(text = placeholder.toString())
         },
         onValueChange = { onChange(it) },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = KeyboardType.Text,
+            imeAction = imeAction
+        ),
         modifier = Modifier.width(280.dp)
     )
 }
 
 @Composable
-private fun NewWordField(viewModel: ViewModelWords, wordId: Int, categoryId: Int) {
+private fun NewWordField(
+    viewModel: ViewModelWords,
+    wordId: Int, categoryId: Int,
+    context: Context
+) {
     Column {
         ButtonRow(
             wordId,
@@ -312,7 +334,8 @@ private fun NewWordField(viewModel: ViewModelWords, wordId: Int, categoryId: Int
             viewModel,
             "",
             "",
-            ""
+            "",
+            context
         )
     }
 }
@@ -325,6 +348,7 @@ private fun UpdateFieldWord(
     placeholder1: String?,
     placeholder2: String?,
     placeholder3: String?,
+    context: Context
 ) {
     Column {
         ButtonRow(
@@ -337,7 +361,8 @@ private fun UpdateFieldWord(
             viewModel,
             placeholder1,
             placeholder2,
-            placeholder3
+            placeholder3,
+            context
         )
     }
 }
@@ -359,9 +384,9 @@ private fun ButtonRow(
             if (isUpdate) {
                 Button(
                     onClick = {
-                        viewModel.updateWord(wordId)
-                        viewModel.getWordsOfCategory(categoryId)
-                              },
+                        viewModel.updateWord(wordId, categoryId)
+//                        viewModel.getWordsOfCategory(categoryId)
+                    },
                     modifier = Modifier
                         .height(50.dp)
                         .width(200.dp)
@@ -373,7 +398,7 @@ private fun ButtonRow(
                     onClick = {
                         viewModel.deleteWord(wordId)
                         viewModel.getWordsOfCategory(categoryId)
-                              },
+                    },
                     modifier = Modifier
                         .height(50.dp)
                         .width(200.dp)
@@ -384,8 +409,8 @@ private fun ButtonRow(
             } else {
                 Button(
                     onClick = {
-                        viewModel.updateWord(wordId)
-                        viewModel.getWordsOfCategory(categoryId)
+                        viewModel.updateWord(wordId, categoryId)
+//                        viewModel.getWordsOfCategory(categoryId)
                     },
                     modifier = Modifier
                         .height(50.dp)
@@ -417,6 +442,7 @@ private fun EditList(
     placeholder1: String?,
     placeholder2: String?,
     placeholder3: String?,
+    context: Context
 ) {
     Row(
         horizontalArrangement = Arrangement.Start,
@@ -427,21 +453,36 @@ private fun EditList(
         Column {
             EditTextWords(
                 text = viewModel.mainLanguage,
-                onChange = { viewModel.updateEnterMainLanguage(it) },
+                onChange = {
+                    if (it.replace(" ", "").isEmpty()){
+                        Toast.makeText(context, "Слово не может быть пустым", Toast.LENGTH_LONG).show()
+                    } else {
+                        viewModel.updateEnterMainLanguage(it)
+                    }
+                           },
                 label = R.string.enterMainLanguage,
-                placeholder = placeholder1
+                placeholder = placeholder1,
+                imeAction = ImeAction.Next
             )
             EditTextWords(
                 text = viewModel.secondLanguage,
-                onChange = { viewModel.updateEnterSecondLanguage(it) },
+                onChange = {
+                    if (it.replace(" ", "").isEmpty()){
+                        Toast.makeText(context, "Перевод не может быть пустым", Toast.LENGTH_LONG).show()
+                    } else {
+                        viewModel.updateEnterSecondLanguage(it)
+                    }
+                           },
                 label = R.string.enterSecondLanguage,
-                placeholder = placeholder2
+                placeholder = placeholder2,
+                imeAction = ImeAction.Next
             )
             EditTextWords(
                 text = viewModel.transcription,
                 onChange = { viewModel.updateTranscription(it) },
                 label = R.string.enterTranscription,
-                placeholder = placeholder3
+                placeholder = placeholder3,
+                imeAction = ImeAction.Done
             )
         }
     }

@@ -1,6 +1,7 @@
 package com.example.words.ui.account.autorization
 
-import android.widget.EditText
+import android.content.Context
+import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,23 +10,26 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.words.R
 import com.example.words.data.model.User
 import com.example.words.ui.navigation.ScreenRoute
@@ -33,8 +37,9 @@ import com.example.words.ui.navigation.ScreenRoute
 @Composable
 fun SignIn(
     navController: NavHostController,
-    viewModel: ViewModelAutorization
-){
+    viewModel: ViewModelAutorization,
+    context: Context
+) {
 
     Column(
         verticalArrangement = Arrangement.Center,
@@ -52,16 +57,24 @@ fun SignIn(
         EditText(
             text = viewModel.username,
             label = R.string.login,
-            onChange = { viewModel.updateEnterUsername(it) }
+            onChange = { viewModel.updateEnterUsername(it) },
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
         )
         Spacer(
             modifier = Modifier
                 .height(20.dp)
         )
-        EditText(
+        EditTextPassword(
             text = viewModel.password,
             label = R.string.password,
-            onChange = { viewModel.updateEnterPassword(it) }
+            onChange = { viewModel.updateEnterPassword(it) },
+            visualTransformation = if (viewModel.showPassword)
+                VisualTransformation.None
+            else PasswordVisualTransformation(),
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done,
+            viewModel = viewModel
         )
         Spacer(
             modifier = Modifier
@@ -69,13 +82,22 @@ fun SignIn(
         )
         Button(
             onClick = {
-            viewModel.signIn(
-                User(
-                    username = viewModel.username,
-                    password = viewModel.password
-                )
-            )
-        },
+                if (viewModel.username.replace(" ", "").isEmpty() || viewModel.password.replace(
+                        " ",
+                        ""
+                    ).isEmpty()
+                ) {
+                    Toast.makeText(context, "Заполните все поля", Toast.LENGTH_LONG).show()
+                } else {
+                    viewModel.signIn(
+                        User(
+                            username = viewModel.username,
+                            password = viewModel.password
+                        ),
+                        context
+                    )
+                }
+            },
             modifier = Modifier.width(340.dp)
         ) {
             Text(text = stringResource(id = R.string.loginIn))
@@ -92,8 +114,10 @@ fun SignIn(
 @Composable
 fun SignUp(
     navController: NavHostController,
-    viewModel: ViewModelAutorization
-){
+    viewModel: ViewModelAutorization,
+    context: Context
+) {
+
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -110,7 +134,9 @@ fun SignUp(
         EditText(
             text = viewModel.username,
             label = R.string.login,
-            onChange = {viewModel.updateEnterUsername(it)}
+            onChange = { viewModel.updateEnterUsername(it) },
+            keyboardType = KeyboardType.Email,
+            imeAction = ImeAction.Next
         )
         Spacer(
             modifier = Modifier
@@ -119,36 +145,51 @@ fun SignUp(
         EditText(
             text = viewModel.name,
             label = R.string.name,
-            onChange = {viewModel.updateEnterName(it)}
+            onChange = { viewModel.updateEnterName(it) },
+            keyboardType = KeyboardType.Text,
+            imeAction = ImeAction.Next
         )
         Spacer(
             modifier = Modifier
                 .height(20.dp)
         )
-        EditText(
+        EditTextPassword(
             text = viewModel.password,
             label = R.string.password,
-            onChange = {viewModel.updateEnterPassword(it)}
+            onChange = { viewModel.updateEnterPassword(it) },
+            visualTransformation = if (viewModel.showPassword)
+                VisualTransformation.None
+            else PasswordVisualTransformation(),
+            keyboardType = KeyboardType.Password,
+            imeAction = ImeAction.Done,
+            viewModel = viewModel
         )
         Spacer(
             modifier = Modifier
                 .height(100.dp)
         )
         Button(onClick = {
-            viewModel.signUp(
-                User(
-                    username = viewModel.username,
-                    name = viewModel.name,
-                    password = viewModel.password
+            if (viewModel.username.replace(" ", "").isEmpty() || viewModel.name.replace(" ", "")
+                    .isEmpty() || viewModel.password.replace(" ", "").isEmpty()
+            ) {
+                Toast.makeText(context, "Заполните все поля", Toast.LENGTH_LONG).show()
+            } else {
+                viewModel.signUp(
+                    User(
+                        username = viewModel.username,
+                        name = viewModel.name,
+                        password = viewModel.password
+                    ),
+                    context
                 )
-            )
+            }
         }) {
             Text(text = stringResource(id = R.string.loginOut))
         }
         Text(
             text = stringResource(id = R.string.loginIn),
             modifier = Modifier.clickable {
-                navController.navigate(ScreenRoute.ScreenLoginOut.name)
+                navController.navigate(ScreenRoute.ScreenLoginIn.name)
             }
         )
     }
@@ -158,22 +199,72 @@ fun SignUp(
 private fun EditText(
     text: String,
     onChange: (String) -> Unit,
-    @StringRes label: Int
-){
+    @StringRes label: Int,
+    keyboardType: KeyboardType,
+    imeAction: ImeAction
+) {
     OutlinedTextField(
         value = text,
         label = {
-                Text(text = stringResource(id = label))
+            Text(text = stringResource(id = label))
         },
+        singleLine = true,
         onValueChange = { onChange(it) },
+        keyboardOptions = KeyboardOptions(
+            keyboardType = keyboardType,
+            imeAction = imeAction
+        ),
         modifier = Modifier.width(340.dp)
     )
 }
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    SignUp(navController = rememberNavController(), viewModel = ViewModelAutorization(
-        rememberNavController())
+private fun EditTextPassword(
+    text: String,
+    onChange: (String) -> Unit,
+    @StringRes label: Int,
+    visualTransformation: VisualTransformation,
+    keyboardType: KeyboardType,
+    imeAction: ImeAction,
+    viewModel: ViewModelAutorization
+) {
+    OutlinedTextField(
+        value = text,
+        label = {
+            Text(text = stringResource(id = label))
+        },
+        singleLine = true,
+        onValueChange = { onChange(it) },
+        visualTransformation = visualTransformation,
+        keyboardOptions = KeyboardOptions(
+            keyboardType = keyboardType,
+            imeAction = imeAction
+        ),
+        trailingIcon = {
+            if (viewModel.showPassword) {
+                IconButton(onClick = { viewModel.showPassword(false) }) {
+                    Icon(
+                        imageVector = Icons.Filled.Visibility,
+                        contentDescription = stringResource(id = R.string.hidePassword)
+                    )
+                }
+            } else {
+                IconButton(onClick = { viewModel.showPassword(true) }) {
+                    Icon(
+                        imageVector = Icons.Filled.VisibilityOff,
+                        contentDescription = stringResource(id = R.string.hidePassword)
+                    )
+                }
+            }
+        },
+        modifier = Modifier.width(340.dp)
     )
 }
+
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    SignUp(navController = rememberNavController(), viewModel = ViewModelAutorization(
+//        rememberNavController())
+//    )
+//}

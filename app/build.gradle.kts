@@ -75,4 +75,6 @@ dependencies {
     implementation("io.insert-koin:koin-compose:3.6.0-wasm-alpha2")
     implementation("io.insert-koin:koin-android:3.6.0-wasm-alpha2")
     implementation("io.insert-koin:koin-core:3.6.0-wasm-alpha2")
+
+    implementation("androidx.compose.material:material-icons-extended:1.3.1")
 }

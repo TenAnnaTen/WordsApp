@@ -1,5 +1,6 @@
 package com.example.words.ui.account.settings
 
+import android.content.Context
 import android.util.Log
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +34,8 @@ import com.example.words.ui.navigation.DialogWithEditField
 fun ScreenSettings(
     viewModelSettings: ScreenSettingsViewModel,
     navController: NavHostController,
-    viewModelCategories: ViewModelCategories
+    viewModelCategories: ViewModelCategories,
+    context: Context
 ) {
     Column(
         verticalArrangement = Arrangement.Top,
@@ -98,7 +100,7 @@ fun ScreenSettings(
         AlertDialogExample(
             onDismissRequest = { viewModelSettings.openAlert(2) },
             onConfirmation = {
-                viewModelSettings.deleteAccount(navController)
+                viewModelSettings.deleteAccount(navController, context)
                 viewModelSettings.openAlert(2)
                              },
             dialogTitle = "${stringResource(id = R.string.accountDelete)}?"
@@ -182,9 +184,9 @@ fun RowWithRadio(
 
 
 
-@Preview
-@Composable
-fun Pop() {
-    ScreenSettings(ScreenSettingsViewModel(), rememberNavController(), ViewModelCategories())
-//    RowWithButtons()
-}
+//@Preview
+//@Composable
+//fun Pop() {
+//    ScreenSettings(ScreenSettingsViewModel(), rememberNavController(), ViewModelCategories())
+////    RowWithButtons()
+//}

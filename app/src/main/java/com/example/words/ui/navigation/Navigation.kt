@@ -92,14 +92,16 @@ fun Navigation(
                 ScreenLearning(
                     viewModelLearning = viewModelLearning,
                     viewModelCategories = viewModelCategories,
-                    viewModelWords = viewModelWords
+                    viewModelWords = viewModelWords,
+                    context = context
                 )
             }
             composable(ScreenRoute.ScreenSettings.name) {
                 ScreenSettings(
                     viewModelSettings = viewModelSettings,
                     viewModelCategories =  viewModelCategories,
-                    navController = navController
+                    navController = navController,
+                    context = context
                 )
             }
         }

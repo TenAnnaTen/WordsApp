@@ -16,13 +16,14 @@ import com.example.words.ui.account.words.ViewModelWords
 fun ListWithCategories(
     categoriesList: MutableList<Categories>,
     viewModel: ViewModelCategories,
-    navController: NavHostController
+    navController: NavHostController,
+    context: Context
 ) {
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 5.dp, vertical = 8.dp)
     ){
         itemsIndexed(items = categoriesList){ _, item ->
-            MyCategories(categories = item, viewModel, navController)
+            MyCategories(categories = item, viewModel, navController, context)
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.example.words.ui.account.settings
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -72,7 +74,7 @@ class ScreenSettingsViewModel: ViewModel() {
 //        }
 //    }
 
-    fun deleteAccount(navController: NavHostController) {
+    fun deleteAccount(navController: NavHostController, context: Context) {
         viewModelScope.launch {
             try {
                 accountRepository.deleteUser(accountStorage.getUserId())
@@ -80,6 +82,7 @@ class ScreenSettingsViewModel: ViewModel() {
                 navController.navigate(ScreenRoute.ScreenWelcome.name)
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
+                Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
             }
         }
     }

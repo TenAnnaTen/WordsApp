@@ -1,6 +1,8 @@
 package com.example.words.ui.account.learning
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,7 +31,8 @@ class ViewModelLearning: ViewModel() {
 
     fun getLearningWord(
         viewModelCategories: ViewModelCategories,
-        viewModelWords: ViewModelWords
+        viewModelWords: ViewModelWords,
+        context: Context
     ) {
 
         if (hasWordSelected) return
@@ -37,7 +40,7 @@ class ViewModelLearning: ViewModel() {
         try {
             if (viewModelCategories.uiState.value.list.isNotEmpty()) {
                 val categoryId = viewModelCategories.uiState.value.list.random().id
-                viewModelWords.getWordsOfCategory(categoryId = categoryId!!)
+                viewModelWords.getWordsOfCategory(categoryId = categoryId!!, context)
                 if (viewModelWords.wordsListResponse.isNotEmpty()) {
                     _uiState.value = ScreenLearningUiState(viewModelWords.wordsListResponse.random())
                     Log.d("MyLog", _uiState.value.toString())
@@ -45,6 +48,7 @@ class ViewModelLearning: ViewModel() {
                 }
             }
         } catch (e: Exception) {
+            Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
             Log.e("MyLog", "Error selecting word: ", e)
         }
 
@@ -52,10 +56,11 @@ class ViewModelLearning: ViewModel() {
 
     fun refreshWord(
         viewModelCategories: ViewModelCategories,
-        viewModelWords: ViewModelWords
+        viewModelWords: ViewModelWords,
+        context: Context
     ) {
         hasWordSelected = false
-        getLearningWord(viewModelCategories, viewModelWords)
+        getLearningWord(viewModelCategories, viewModelWords, context)
     }
 
 }

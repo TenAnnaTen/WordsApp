@@ -1,6 +1,8 @@
 package com.example.words.ui.account.words
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -31,17 +33,18 @@ class ViewModelWords: ViewModel() {
 
     var transcription by mutableStateOf("")
         private set
-    fun getWordsOfCategory(categoryId: Int) {
+    fun getWordsOfCategory(categoryId: Int, context: Context) {
         viewModelScope.launch {
             try {
                 wordsListResponse = wordsRepository.getWordsOfCategory(categoryId)
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
+                Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
             }
         }
     }
 
-    fun addWord(categoryId: Int){
+    fun addWord(categoryId: Int, context: Context){
         viewModelScope.launch {
             try {
                 val response = wordsRepository.addWord(categoryId, Word(
@@ -55,7 +58,7 @@ class ViewModelWords: ViewModel() {
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
             }
-            getWordsOfCategory(categoryId)
+            getWordsOfCategory(categoryId, context)
             reset()
         }
     }
@@ -66,7 +69,7 @@ class ViewModelWords: ViewModel() {
         updateTranscription("")
     }
 
-    fun updateWord(wordId: Int, categoryId: Int) {
+    fun updateWord(wordId: Int, categoryId: Int, context: Context) {
         viewModelScope.launch {
             try {
                 wordsRepository.update(
@@ -82,7 +85,7 @@ class ViewModelWords: ViewModel() {
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
             }
-            getWordsOfCategory(categoryId)
+            getWordsOfCategory(categoryId, context)
         }
     }
     fun deleteWord(wordId: Int) {

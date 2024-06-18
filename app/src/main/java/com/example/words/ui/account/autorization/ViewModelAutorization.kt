@@ -52,6 +52,7 @@ class ViewModelAutorization(
                     Toast.makeText(context, "Пользователь с таким логином уже существует", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
+                Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
                 Log.d("MyLog", e.toString())
             }
         }
@@ -71,6 +72,7 @@ class ViewModelAutorization(
                 }
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
+                Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
             }
         }
     }

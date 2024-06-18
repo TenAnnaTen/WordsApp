@@ -1,6 +1,8 @@
 package com.example.words.ui.account.categories
 
+import android.content.Context
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -40,7 +42,7 @@ class ViewModelCategories : ViewModel() {
     var openAlertDialog by mutableStateOf(false)
 //    var selectedTabIndex by mutableStateOf(false)
 
-    fun addCategory(categories: Categories) {
+    fun addCategory(categories: Categories, context: Context) {
         viewModelScope.launch {
             try {
                 categoriesRepository.addCategories(
@@ -49,33 +51,33 @@ class ViewModelCategories : ViewModel() {
                 )
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
-//                Log.d("MyLog", accountStorage.getUserId().toString())
+                Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
             }
-            getMyCategories()
+            getMyCategories(context)
         }
     }
 
-    fun getMyCategories() {
+    fun getMyCategories(context: Context) {
         viewModelScope.launch {
             try {
                 val response = categoriesRepository.getMyCategories(accountStorage.getUserId())
                 categoriesListResponse = response
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
-//                Log.d("MyLog", accountStorage.getUserId().toString())
+                Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
             }
             _uiState.value = CategoriesUiState(list = categoriesListResponse)
         }
     }
 
-    fun getUsersOfCategories(categoryId: Int) {
+    fun getUsersOfCategories(categoryId: Int, context: Context) {
         viewModelScope.launch {
             try {
                 val response = categoriesRepository.getUsersOfCategories(categoryId)
                 usersListResponse = response
-//                Log.d("MyLog", usersListResponse[0].toString())
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
+                Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
             }
         }
     }
@@ -108,21 +110,20 @@ class ViewModelCategories : ViewModel() {
 //        }
 //    }
 
-    fun delCategory(categoryId: Int) {
+    fun delCategory(categoryId: Int, context: Context) {
         viewModelScope.launch {
             try {
                 categoriesRepository.delCategory(categoryId)
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
             }
-            getMyCategories()
+            getMyCategories(context)
         }
     }
 
-    fun updateCategoryName(categoryId: Int, category: Categories) {
+    fun updateCategoryName(categoryId: Int, category: Categories, context: Context) {
         viewModelScope.launch {
             try {
-                Log.d("MyLog", "Updating category with ID: $categoryId and data: ${category.category_name}")
                 _wordUiState.value = ScreenWordsUiState(category.category_name!!)
                 val response = categoriesRepository.updateNameCategory(categoryId, category)
                 if (response.isSuccessful) {
@@ -131,9 +132,7 @@ class ViewModelCategories : ViewModel() {
                     Log.d("MyLog", "Error updating category: ${response.errorBody()?.string()}")
                 }
             } catch (e: Exception) {
-                Log.d("MyLog", "Exception: $e")
-                Log.d("MyLog", "CategoryId: $categoryId")
-                Log.d("MyLog", "CategoryName: ${category.category_name}")
+                Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
             }
         }
     }

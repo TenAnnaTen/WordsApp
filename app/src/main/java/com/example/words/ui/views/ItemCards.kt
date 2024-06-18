@@ -52,6 +52,7 @@ fun MyCategories(
     categories: Categories,
     viewModel: ViewModelCategories,
     navController: NavHostController,
+    context: Context
 ) {
 
     val openAlertDialog = remember { mutableStateOf(false) }
@@ -81,7 +82,7 @@ fun MyCategories(
                 horizontalAlignment = Alignment.End
             ) {
                 if (categories.id != null) {
-                    viewModel.getUsersOfCategories(categories.id)
+                    viewModel.getUsersOfCategories(categories.id, context)
                     if (viewModel.usersListResponse.isNotEmpty()) {
                         CirclesWithInitial(
                             initial = viewModel.usersListResponse.random().name!!.first().toString()
@@ -111,7 +112,7 @@ fun MyCategories(
             onDismissRequest = { openAlertDialog.value = false },
             onConfirmation = {
                 openAlertDialog.value = false
-                viewModel.delCategory(categories.id!!)
+                viewModel.delCategory(categories.id!!, context)
             },
             dialogTitle = stringResource(id = R.string.delAlert)
         )
@@ -213,7 +214,7 @@ fun WordsCard(
             .height(if (isExpanded) 500.dp else 140.dp)
             .clickable {
                 viewModel.updateCard(word.id!!)
-                viewModel.getWordsOfCategory(categoryId)
+                viewModel.getWordsOfCategory(categoryId, context)
             }
     ) {
         Column(
@@ -328,7 +329,8 @@ private fun NewWordField(
             wordId,
             viewModel,
             categoryId,
-            isUpdate = false
+            isUpdate = false,
+            context
         )
         EditList(
             viewModel,
@@ -355,7 +357,8 @@ private fun UpdateFieldWord(
             wordId,
             viewModel,
             categoryId,
-            isUpdate = true
+            isUpdate = true,
+            context
         )
         EditList(
             viewModel,
@@ -372,7 +375,8 @@ private fun ButtonRow(
     wordId: Int,
     viewModel: ViewModelWords,
     categoryId: Int,
-    isUpdate: Boolean
+    isUpdate: Boolean,
+    context: Context
 ) {
     Row(
         horizontalArrangement = Arrangement.End,
@@ -384,7 +388,7 @@ private fun ButtonRow(
             if (isUpdate) {
                 Button(
                     onClick = {
-                        viewModel.updateWord(wordId, categoryId)
+                        viewModel.updateWord(wordId, categoryId, context)
 //                        viewModel.getWordsOfCategory(categoryId)
                     },
                     modifier = Modifier
@@ -397,7 +401,7 @@ private fun ButtonRow(
                 Button(
                     onClick = {
                         viewModel.deleteWord(wordId)
-                        viewModel.getWordsOfCategory(categoryId)
+                        viewModel.getWordsOfCategory(categoryId, context)
                     },
                     modifier = Modifier
                         .height(50.dp)
@@ -409,7 +413,7 @@ private fun ButtonRow(
             } else {
                 Button(
                     onClick = {
-                        viewModel.updateWord(wordId, categoryId)
+                        viewModel.updateWord(wordId, categoryId, context)
 //                        viewModel.getWordsOfCategory(categoryId)
                     },
                     modifier = Modifier
@@ -422,7 +426,7 @@ private fun ButtonRow(
                 Button(
                     onClick = {
                         viewModel.deleteWord(wordId)
-                        viewModel.getWordsOfCategory(categoryId)
+                        viewModel.getWordsOfCategory(categoryId, context)
                     },
                     modifier = Modifier
                         .height(50.dp)

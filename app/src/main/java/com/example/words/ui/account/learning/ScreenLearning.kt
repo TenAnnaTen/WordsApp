@@ -1,5 +1,6 @@
 package com.example.words.ui.account.learning
 
+import android.content.Context
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
@@ -30,7 +31,8 @@ import com.example.words.ui.account.words.ViewModelWords
 fun ScreenLearning(
     viewModelLearning: ViewModelLearning,
     viewModelCategories: ViewModelCategories,
-    viewModelWords: ViewModelWords
+    viewModelWords: ViewModelWords,
+    context: Context
 ){
     Row (
         verticalAlignment = Alignment.CenterVertically,
@@ -41,7 +43,8 @@ fun ScreenLearning(
                 detectHorizontalDragGestures { change, dragAmount ->
                     if (dragAmount > 0) viewModelLearning.refreshWord(
                         viewModelCategories,
-                        viewModelWords
+                        viewModelWords,
+                        context
                     )
                 }
             }
@@ -49,7 +52,8 @@ fun ScreenLearning(
         FlippableCard(
             viewModelLearning,
             viewModelCategories,
-            viewModelWords
+            viewModelWords,
+            context
         )
     }
 }
@@ -58,7 +62,8 @@ fun ScreenLearning(
 private fun FlippableCard(
     viewModelLearning: ViewModelLearning,
     viewModelCategories: ViewModelCategories,
-    viewModelWords: ViewModelWords
+    viewModelWords: ViewModelWords,
+    context: Context
 ) {
 
     val rotation by animateFloatAsState(
@@ -70,7 +75,8 @@ private fun FlippableCard(
 
     viewModelLearning.getLearningWord(
         viewModelCategories,
-        viewModelWords
+        viewModelWords,
+        context
     )
 
     Box(

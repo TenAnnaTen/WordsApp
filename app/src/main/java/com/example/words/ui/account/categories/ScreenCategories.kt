@@ -67,9 +67,10 @@ fun ScreenCategories(
             ListWithCategories(
                 categoriesList = listCategories.value.list,
                 viewModel,
-                navController
+                navController,
+                context
             )
-            viewModel.getMyCategories()
+            viewModel.getMyCategories(context)
         }
         Button(
             onClick = {
@@ -106,7 +107,8 @@ fun ScreenCategories(
                     viewModel.addCategory(
                         Categories(
                             category_name = viewModel.enter
-                        )
+                        ),
+                        context
                     )
                 }
             },

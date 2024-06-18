@@ -97,11 +97,11 @@ fun ScreenWords(
                 categoryId,
                 context
             )
-            viewModel.getWordsOfCategory(categoryId)
+            viewModel.getWordsOfCategory(categoryId, context)
         }
         Button(
             onClick = {
-                viewModel.addWord(categoryId)
+                viewModel.addWord(categoryId, context)
             },
         ) {
             Row {
@@ -125,7 +125,8 @@ fun ScreenWords(
                     viewModel.openCloseDialog()
                     viewModelCategories.updateCategoryName(
                         categoryId,
-                        Categories(category_name = categoryNam)
+                        Categories(category_name = categoryNam),
+                        context
                     )
                 } else {
                     Toast.makeText(context, "азвание не может быть пустым", Toast.LENGTH_LONG).show()

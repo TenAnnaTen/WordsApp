@@ -10,8 +10,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.words.data.model.Categories
 import com.example.words.data.model.User
-import com.example.words.data.model.idState
-import com.example.words.data.repository.AccountRepository
 import com.example.words.data.repository.CategoriesRepository
 import com.example.words.data.storage.AccountStorage
 import com.example.words.ui.account.words.ScreenWordsUiState
@@ -124,7 +122,7 @@ class ViewModelCategories : ViewModel() {
     fun updateCategoryName(categoryId: Int, category: Categories, context: Context) {
         viewModelScope.launch {
             try {
-                _wordUiState.value = ScreenWordsUiState(category.category_name!!)
+                _wordUiState.update { it.copy(title = category.category_name!!) }
                 val response = categoriesRepository.updateNameCategory(categoryId, category)
                 if (response.isSuccessful) {
                     Log.d("MyLog", "Category updated successfully")

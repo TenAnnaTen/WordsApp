@@ -11,6 +11,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.words.data.model.Word
 import com.example.words.data.repository.WordsRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ViewModelWords: ViewModel() {
@@ -21,6 +24,9 @@ class ViewModelWords: ViewModel() {
 
     private val _expandedCards = mutableStateMapOf<Int, Boolean>()
     val expandedCards = _expandedCards
+
+    private var _uiState = MutableStateFlow(ScreenWordsUiState())
+    val uiState = _uiState.asStateFlow()
 
     var dialog by mutableStateOf(false)
         private set
@@ -37,6 +43,7 @@ class ViewModelWords: ViewModel() {
         viewModelScope.launch {
             try {
                 wordsListResponse = wordsRepository.getWordsOfCategory(categoryId)
+                _uiState.update { it.copy(listWords = wordsListResponse) }
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
                 Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
@@ -88,7 +95,7 @@ class ViewModelWords: ViewModel() {
             getWordsOfCategory(categoryId, context)
         }
     }
-    fun deleteWord(wordId: Int) {
+    fun deleteWord(wordId: Int, categoryId: Int, context: Context) {
         viewModelScope.launch {
             try {
                 wordsRepository.deleteWord(wordId)
@@ -96,6 +103,7 @@ class ViewModelWords: ViewModel() {
                 Log.d("MyLog", e.toString())
             }
         }
+        getWordsOfCategory(categoryId, context)
     }
 
     fun updateCard(wordId: Int) {

@@ -49,6 +49,7 @@ fun ScreenWords(
 ) {
 
     val nameCategory = viewModelCategories.wordUiState.collectAsState()
+    val listWords = viewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier
@@ -92,7 +93,7 @@ fun ScreenWords(
                 .padding(10.dp)
         ) {
             ListWithWords(
-                wordsList = viewModel.wordsListResponse,
+                wordsList = listWords.value.listWords,
                 viewModel = viewModel,
                 categoryId,
                 context

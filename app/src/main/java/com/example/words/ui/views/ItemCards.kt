@@ -213,7 +213,7 @@ fun WordsCard(
             .height(if (isExpanded) 500.dp else 140.dp)
             .clickable {
                 viewModel.updateCard(word.id!!)
-                viewModel.getWordsOfCategory(categoryId, context)
+//                viewModel.getWordsOfCategory(categoryId, context)
             }
     ) {
         Column(
@@ -399,8 +399,8 @@ private fun ButtonRow(
                 }
                 Button(
                     onClick = {
-                        viewModel.deleteWord(wordId)
-                        viewModel.getWordsOfCategory(categoryId, context)
+                        viewModel.deleteWord(wordId, categoryId, context)
+//                        viewModel.getWordsOfCategory(categoryId, context)
                     },
                     modifier = Modifier
                         .height(50.dp)
@@ -424,8 +424,8 @@ private fun ButtonRow(
                 }
                 Button(
                     onClick = {
-                        viewModel.deleteWord(wordId)
-                        viewModel.getWordsOfCategory(categoryId, context)
+                        viewModel.deleteWord(wordId, categoryId, context)
+//                        viewModel.getWordsOfCategory(categoryId, context)
                     },
                     modifier = Modifier
                         .height(50.dp)

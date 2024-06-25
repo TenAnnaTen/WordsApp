@@ -1,7 +1,6 @@
 package com.example.words.ui.account.categories
 
 import android.content.Context
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,7 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.words.R
 import com.example.words.data.model.Categories
-import com.example.words.ui.account.words.ViewModelWords
 import com.example.words.ui.navigation.DialogWithEditField
 import com.example.words.ui.views.ListWithCategories
 
@@ -101,7 +99,8 @@ fun ScreenCategories(
             onDismissRequest = { viewModel.openDialog() },
             onConfirmation = {
                 if (viewModel.enter.replace(" ", "").isEmpty()) {
-                    Toast.makeText(context, "Название не может быть пустым", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Название не может быть пустым", Toast.LENGTH_LONG)
+                        .show()
                 } else {
                     viewModel.openDialog()
                     viewModel.addCategory(

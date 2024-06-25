@@ -210,7 +210,6 @@ fun WordsCard(
         modifier = Modifier
             .width(500.dp)
             .padding(10.dp)
-            .animateContentSize()
             .height(if (isExpanded) 500.dp else 140.dp)
             .clickable {
                 viewModel.updateCard(word.id!!)
@@ -379,7 +378,7 @@ private fun ButtonRow(
     context: Context
 ) {
     Row(
-        horizontalArrangement = Arrangement.End,
+        horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
@@ -449,7 +448,7 @@ private fun EditList(
     context: Context
 ) {
     Row(
-        horizontalArrangement = Arrangement.Start,
+        horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)

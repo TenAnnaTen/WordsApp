@@ -12,11 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.words.R
 import com.example.words.data.storage.AccountStorage
 import com.example.words.ui.navigation.ScreenRoute
@@ -58,7 +56,7 @@ fun ScreenWelcome(
 private fun ButtonAutor(
     text: String,
     toDo: () -> Unit
-){
+) {
     Button(
         onClick = { toDo() },
         modifier = Modifier

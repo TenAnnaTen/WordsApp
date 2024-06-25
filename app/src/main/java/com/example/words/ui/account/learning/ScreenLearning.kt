@@ -152,8 +152,8 @@ private fun BackSide(
     }
 }
 
-@Preview
-@Composable
-fun PreviewFlippableCard() {
-    BackSide(text1 = "fdtgfds", text2 = "fgtyuiokjhg")
-}
+//@Preview
+//@Composable
+//fun PreviewFlippableCard() {
+//    BackSide(text1 = "fdtgfds", text2 = "fgtyuiokjhg")
+//}

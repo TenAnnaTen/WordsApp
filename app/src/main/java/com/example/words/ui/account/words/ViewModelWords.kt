@@ -102,8 +102,8 @@ class ViewModelWords: ViewModel() {
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
             }
+            getWordsOfCategory(categoryId, context)
         }
-        getWordsOfCategory(categoryId, context)
     }
 
     fun updateCard(wordId: Int) {

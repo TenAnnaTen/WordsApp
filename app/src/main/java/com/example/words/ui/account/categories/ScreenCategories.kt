@@ -26,7 +26,9 @@ import androidx.navigation.NavHostController
 import com.example.words.R
 import com.example.words.data.model.Categories
 import com.example.words.ui.navigation.DialogWithEditField
+import com.example.words.ui.navigation.TabRowScreen
 import com.example.words.ui.views.ListWithCategories
+import com.example.words.ui.views.ListWithPublicCategories
 
 @Composable
 fun ScreenCategories(
@@ -50,70 +52,81 @@ fun ScreenCategories(
             modifier = modifier
                 .padding(vertical = 20.dp)
         )
-//        TabRowScreen(
-//            tabTitles = mutableListOf(stringResource(id = R.string.my_categories), stringResource(id = R.string.public_categories)),
-//            selectedTabIndex = viewModel.selectedTabIndex,
-//            onClick = { viewModel.switchList() },
-//        )
-//        if (!viewModel.selectedTabIndex) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(600.dp)
-                .padding(10.dp)
-        ) {
-            ListWithCategories(
-                categoriesList = listCategories.value.list,
-                viewModel,
-                navController,
-                context
-            )
-            viewModel.getMyCategories(context)
-        }
-        Button(
-            onClick = {
-                viewModel.openDialog()
-            },
-        ) {
-            Row {
-                Icon(
-                    imageVector = Icons.Filled.Add,
-                    contentDescription = null
+        TabRowScreen(
+            tabTitles = mutableListOf(
+                stringResource(id = R.string.my_categories),
+                stringResource(id = R.string.public_categories)
+            ),
+            selectedTabIndex = viewModel.selectedTabIndex,
+            onClick = { viewModel.switchList() },
+        )
+        if (!viewModel.selectedTabIndex) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(580.dp)
+                    .padding(10.dp)
+            ) {
+                ListWithCategories(
+                    categoriesList = listCategories.value.list,
+                    viewModel,
+                    navController,
+                    context
                 )
-                Text(
-                    text = stringResource(id = R.string.add_categories),
-                    fontSize = 16.sp
-                )
+                viewModel.getMyCategories(context)
             }
-        }
-//        } else {
-//            ListWithPublicCategories(
-//                categoriesList = viewModel.categoriesListResponse,
-//                viewModel
-//            )
-//            viewModel.getPublicCategories()
-//        }
-    }
-    if (viewModel.openAlertDialog) {
-        DialogWithEditField(
-            onDismissRequest = { viewModel.openDialog() },
-            onConfirmation = {
-                if (viewModel.enter.replace(" ", "").isEmpty()) {
-                    Toast.makeText(context, "Название не может быть пустым", Toast.LENGTH_LONG)
-                        .show()
-                } else {
+            Button(
+                onClick = {
                     viewModel.openDialog()
-                    viewModel.addCategory(
-                        Categories(
-                            category_name = viewModel.enter
-                        ),
-                        context
+                },
+            ) {
+                Row {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = null
+                    )
+                    Text(
+                        text = stringResource(id = R.string.add_categories),
+                        fontSize = 16.sp
                     )
                 }
-            },
-            viewModel = viewModel,
-            text = stringResource(id = R.string.enterNameCategory)
-        )
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(580.dp)
+                    .padding(10.dp)
+            ) {
+                ListWithPublicCategories(
+                    categoriesList = viewModel.publicCategoriesListResponse,
+                    viewModel,
+                    navController
+                )
+                viewModel.getPublicCategories()
+            }
+        }
+        if (viewModel.openAlertDialog) {
+            DialogWithEditField(
+                onDismissRequest = { viewModel.openDialog() },
+                onConfirmation = {
+                    if (viewModel.enter.replace(" ", "").isEmpty()) {
+                        Toast.makeText(context, "Название не может быть пустым", Toast.LENGTH_LONG)
+                            .show()
+                    } else {
+                        viewModel.openDialog()
+                        viewModel.addCategory(
+                            Categories(
+                                category_name = viewModel.enter
+                            ),
+                            context
+                        )
+                    }
+                },
+                viewModel = viewModel,
+                text = stringResource(id = R.string.enterNameCategory)
+            )
+        }
     }
 }
 

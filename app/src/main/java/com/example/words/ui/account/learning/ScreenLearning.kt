@@ -17,6 +17,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
@@ -34,6 +37,10 @@ fun ScreenLearning(
     viewModelWords: ViewModelWords,
     context: Context
 ){
+
+    var lastDragTime by remember { mutableStateOf(0L) }
+    val minSwipeDistance = 10 // Минимальное расстояние для регистрации свайпа в пикселях
+
     Row (
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
@@ -41,11 +48,18 @@ fun ScreenLearning(
             .fillMaxSize()
             .pointerInput(Unit) {
                 detectHorizontalDragGestures { change, dragAmount ->
-                    if (dragAmount > 0) viewModelLearning.refreshWord(
-                        viewModelCategories,
-                        viewModelWords,
-                        context
-                    )
+                    if (dragAmount > minSwipeDistance) {
+                        val currentTime = System.currentTimeMillis()
+                        // Добавляем минимальный интервал между свайпами в миллисекундах
+                        if (currentTime - lastDragTime > 150) {
+                            viewModelLearning.refreshWord(
+                                viewModelCategories,
+                                viewModelWords,
+                                context
+                            )
+                            lastDragTime = currentTime
+                        }
+                    }
                 }
             }
     ) {

@@ -3,20 +3,20 @@ package com.example.words.ui.account.learning
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.words.data.model.Categories
 import com.example.words.data.model.Word
 import com.example.words.ui.account.categories.ViewModelCategories
 import com.example.words.ui.account.words.ViewModelWords
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class ViewModelLearning: ViewModel() {
+class ViewModelLearning : ViewModel() {
 
     var isFlipped = mutableStateOf(false)
 
@@ -34,24 +34,44 @@ class ViewModelLearning: ViewModel() {
         viewModelWords: ViewModelWords,
         context: Context
     ) {
-
         if (hasWordSelected) return
 
-        try {
-            if (viewModelCategories.uiState.value.list.isNotEmpty()) {
-                val categoryId = viewModelCategories.uiState.value.list.random().id
-                viewModelWords.getWordsOfCategory(categoryId = categoryId!!, context)
-                if (viewModelWords.wordsListResponse.isNotEmpty()) {
-                    _uiState.value = ScreenLearningUiState(viewModelWords.wordsListResponse.random())
-                    Log.d("MyLog", _uiState.value.toString())
-                    hasWordSelected = true
+        viewModelScope.launch {
+            try {
+                viewModelCategories.getPublicCategories()
+                val categoriesList = mutableListOf<Categories>().apply {
+                    addAll(viewModelCategories.uiState.value.list)
+                    addAll(viewModelCategories.uiState.value.list2)
                 }
+                if (categoriesList.isNotEmpty()) {
+                    changeWord(categoriesList, viewModelWords, context)
+                }
+            } catch (e: Exception) {
+//                withContext(Dispatchers.Main) {
+//                    Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
+//                }
+                Log.e("MyLog", "Error selecting word: ", e)
             }
-        } catch (e: Exception) {
-            Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
-            Log.e("MyLog", "Error selecting word: ", e)
         }
+    }
 
+    private suspend fun changeWord(
+        listChange: MutableList<Categories>,
+        viewModelWords: ViewModelWords,
+        context: Context
+    ) {
+        val categoryId = listChange.random().id
+        viewModelWords.getWordsOfCategory(categoryId = categoryId!!, context)
+        if (viewModelWords.wordsListResponse.isNotEmpty()) {
+            var a: Word
+            do {
+                a = viewModelWords.wordsListResponse.random()
+            } while (_uiState.value.word.id == a.id && viewModelWords.wordsListResponse.size > 1)
+
+            _uiState.value = ScreenLearningUiState(a)
+            Log.d("MyLog", _uiState.value.toString())
+            hasWordSelected = true
+        }
     }
 
     fun refreshWord(
@@ -62,5 +82,4 @@ class ViewModelLearning: ViewModel() {
         hasWordSelected = false
         getLearningWord(viewModelCategories, viewModelWords, context)
     }
-
 }

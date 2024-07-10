@@ -44,16 +44,17 @@ fun ListWithWords(
     }
 }
 
-//@Composable
-//fun ListWithPublicCategories(
-//    categoriesList: MutableList<Categories>,
-//    viewModel: ViewModelCategories
-//) {
-//    LazyColumn(
-//        contentPadding = PaddingValues(horizontal = 5.dp, vertical = 8.dp)
-//    ){
-//        itemsIndexed(items = categoriesList){index, item ->
-//            PublicCategories(categories = item, viewModel)
-//        }
-//    }
-//}
+@Composable
+fun ListWithPublicCategories(
+    categoriesList: MutableList<Categories>,
+    viewModel: ViewModelCategories,
+    navController: NavHostController
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 5.dp, vertical = 8.dp)
+    ){
+        itemsIndexed(items = categoriesList){index, item ->
+            PublicCategories(categories = item, viewModel, navController)
+        }
+    }
+}

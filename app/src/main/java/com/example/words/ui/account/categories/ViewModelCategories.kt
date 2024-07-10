@@ -4,12 +4,14 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.words.data.model.Categories
 import com.example.words.data.model.User
+import com.example.words.data.repository.AccountRepository
 import com.example.words.data.repository.CategoriesRepository
 import com.example.words.data.storage.AccountStorage
 import com.example.words.ui.account.words.ScreenWordsUiState
@@ -22,13 +24,17 @@ class ViewModelCategories : ViewModel() {
 
     val categoriesRepository = CategoriesRepository()
     val accountStorage = AccountStorage()
-//    val accountRepository = AccountRepository()
+    val accountRepository = AccountRepository()
 
     var categoriesListResponse: MutableList<Categories> by mutableStateOf(mutableListOf())
+    var publicCategoriesListResponse: MutableList<Categories> by mutableStateOf(mutableListOf())
     var usersListResponse: MutableList<User> by mutableStateOf(mutableListOf())
 
-//    private val _state = MutableStateFlow(User())
-//    val state = _state.asStateFlow()
+    private val _state = MutableStateFlow(User())
+    val state = _state.asStateFlow()
+
+    private val _nameOwner = mutableStateMapOf<Int, String>()
+    val nameOwner = _nameOwner
 
     private val _uiState = MutableStateFlow(CategoriesUiState())
     val uiState = _uiState.asStateFlow()
@@ -38,7 +44,7 @@ class ViewModelCategories : ViewModel() {
 
     var enter by mutableStateOf("")
     var openAlertDialog by mutableStateOf(false)
-//    var selectedTabIndex by mutableStateOf(false)
+    var selectedTabIndex by mutableStateOf(false)
 
     fun addCategory(categories: Categories, context: Context) {
         viewModelScope.launch {
@@ -64,7 +70,7 @@ class ViewModelCategories : ViewModel() {
                 Log.d("MyLog", e.toString())
                 Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
             }
-            _uiState.value = CategoriesUiState(list = categoriesListResponse)
+            _uiState.update { it.copy(list = categoriesListResponse) }
         }
     }
 
@@ -80,33 +86,33 @@ class ViewModelCategories : ViewModel() {
         }
     }
 
-//    fun getPublicCategories() {
-//        viewModelScope.launch {
-//            try {
-//                categoriesListResponse = categoriesRepository.getPublicCategories(accountStorage.getUserId())
-////                Log.d("MyLog", categoriesRepository.getPublicCategories(accountStorage.getUserId()).toString())
-//            } catch (e: Exception) {
-//                Log.d("MyLog", e.toString())
-//            }
-//        }
-//    }
+    fun getPublicCategories() {
+        viewModelScope.launch {
+            try {
+                publicCategoriesListResponse = categoriesRepository.getPublicCategories(accountStorage.getUserId())
+            } catch (e: Exception) {
+                Log.d("MyLog", e.toString())
+            }
+            _uiState.update { it.copy(list2 = publicCategoriesListResponse) }
+        }
+    }
 
-//    fun getUserById(userId: Int){
-//        viewModelScope.launch {
-//            try {
-//                val response = accountRepository.getUserById(userId)
-//                if (response.isSuccessful) {
-//                    val ownerName = response.body()?.name
-//                    _state.update { it.copy(name = ownerName) }
-//                    Log.d("MyLog", _state.value.name + "VM")
-//                } else {
-//                    Log.d("MyLog", "Error: ${response.errorBody()}")
-//                }
-//            } catch (e: Exception) {
-//                Log.d("MyLog", e.toString())
-//            }
-//        }
-//    }
+    fun getUserById(userId: Int){
+        viewModelScope.launch {
+            try {
+                val response = accountRepository.getUserById(userId)
+                if (response.isSuccessful) {
+                    val ownerName = response.body()?.name
+                    Log.d("MyLog", response.body()?.name.toString())
+                    _state.update { it.copy(name = ownerName) }
+                } else {
+                    Log.d("MyLog", "Error: ${response.errorBody()}")
+                }
+            } catch (e: Exception) {
+                Log.d("MyLog", e.toString())
+            }
+        }
+    }
 
     fun delCategory(categoryId: Int, context: Context) {
         viewModelScope.launch {
@@ -135,18 +141,30 @@ class ViewModelCategories : ViewModel() {
         }
     }
 
-//    fun getNameOwner(userId: Int){
-//        getUserById(userId)
-//    }
+    fun getNameOwner(userId: Int, categoryId: Int){
+        viewModelScope.launch {
+            try {
+                val response = accountRepository.getUserById(userId)
+                if (response.isSuccessful) {
+                    val ownerName = response.body()?.name
+                    _nameOwner[categoryId] = ownerName.toString()
+                } else {
+                    Log.d("MyLog", "Error: ${response.errorBody()}")
+                }
+            } catch (e: Exception) {
+                Log.d("MyLog", e.toString())
+            }
+        }
+    }
 
     fun updateEnter(enter: String) {
         this.enter = enter
         Log.d("MyLog", "enter: ${this.enter}")
     }
 
-//    fun switchList() {
-//        selectedTabIndex = !selectedTabIndex
-//    }
+    fun switchList() {
+        selectedTabIndex = !selectedTabIndex
+    }
 
     fun openDialog() {
         openAlertDialog = !openAlertDialog

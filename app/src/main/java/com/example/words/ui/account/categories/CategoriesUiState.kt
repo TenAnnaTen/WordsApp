@@ -3,5 +3,6 @@ package com.example.words.ui.account.categories
 import com.example.words.data.model.Categories
 
 data class CategoriesUiState(
-    val list: MutableList<Categories> = mutableListOf()
+    var list: MutableList<Categories> = mutableListOf(),
+    var list2: MutableList<Categories> = mutableListOf()
 )

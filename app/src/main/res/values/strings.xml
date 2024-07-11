@@ -34,5 +34,13 @@
     <string name="accountExit">Выйти из профиля</string>
     <string name="nameChange">Введите новое имя пользователя</string>
     <string name="hidePassword">Спрятать пароль</string>
+    <string name="noneWord">У вас нет изучаемых слов</string>
+    <string name="noneWordAdd">Вы можете добавить их здесь</string>
+    <string name="noneCategories">У вас нет категорий слов</string>
+    <string name="nonePublicCategories">У вас нет общих категорий</string>
+    <string name="words">Слова</string>
+    <string name="people">Добавленные пользователи</string>
+    <string name="delUser">Удалить этого пользователя?</string>
+    <string name="addUser">Введите id пользователя</string>
 
 </resources>

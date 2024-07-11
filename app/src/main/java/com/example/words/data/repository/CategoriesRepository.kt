@@ -30,4 +30,11 @@ class CategoriesRepository {
     suspend fun updateNameCategory(categoryId: Int, categories: Categories): Response<Categories> {
         return RetrofitInstance.categoriesService.updateNameCategory(categories, categoryId)
     }
+
+    suspend fun addUserByCategory(categoryId: Int, userId: Int): Response<Int> {
+        return RetrofitInstance.categoriesService.addUserByCategory(categoryId, userId)
+    }
+    suspend fun deleteUserByCategory(categoryId: Int, userId: Int): Response<Int> {
+        return RetrofitInstance.categoriesService.deleteUserByCategory(categoryId, userId)
+    }
 }

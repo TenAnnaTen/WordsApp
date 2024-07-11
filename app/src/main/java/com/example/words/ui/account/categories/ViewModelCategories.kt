@@ -83,6 +83,7 @@ class ViewModelCategories : ViewModel() {
                 Log.d("MyLog", e.toString())
                 Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
             }
+            _wordUiState.update { it.copy(listUsers = usersListResponse) }
         }
     }
 
@@ -150,6 +151,37 @@ class ViewModelCategories : ViewModel() {
                     _nameOwner[categoryId] = ownerName.toString()
                 } else {
                     Log.d("MyLog", "Error: ${response.errorBody()}")
+                }
+            } catch (e: Exception) {
+                Log.d("MyLog", e.toString())
+            }
+        }
+    }
+
+    fun addUserByCategory(categoryId: Int, userId: Int, context: Context) {
+        viewModelScope.launch {
+            try {
+                val response = categoriesRepository.addUserByCategory(categoryId, userId)
+                if (response.isSuccessful) {
+                    getUsersOfCategories(categoryId, context)
+                } else {
+                    Toast.makeText(context, "Пользователь не найден", Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                Log.d("MyLog", e.toString())
+            }
+        }
+    }
+
+    fun delUserByCategory(categoryId: Int, userId: Int, context: Context) {
+        viewModelScope.launch {
+            try {
+                val response = categoriesRepository.deleteUserByCategory(categoryId, userId)
+                if (response.isSuccessful) {
+                    getUsersOfCategories(categoryId, context)
+                    getPublicCategories()
+                } else {
+                    Toast.makeText(context, "Пользователь не найден", Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())

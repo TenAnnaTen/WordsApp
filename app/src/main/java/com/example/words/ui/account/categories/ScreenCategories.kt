@@ -67,6 +67,15 @@ fun ScreenCategories(
                     .height(580.dp)
                     .padding(10.dp)
             ) {
+                if (listCategories.value.list.isEmpty()){
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(text = stringResource(id = R.string.noneCategories))
+                    }
+                }
                 ListWithCategories(
                     categoriesList = listCategories.value.list,
                     viewModel,
@@ -98,9 +107,19 @@ fun ScreenCategories(
                     .height(580.dp)
                     .padding(10.dp)
             ) {
+                if (listCategories.value.list2.isEmpty()){
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Text(text = stringResource(id = R.string.nonePublicCategories))
+                    }
+                }
                 ListWithPublicCategories(
-                    categoriesList = viewModel.publicCategoriesListResponse,
+                    categoriesList = listCategories.value.list2,
                     viewModel,
+                    context,
                     navController
                 )
                 viewModel.getPublicCategories()
@@ -108,7 +127,10 @@ fun ScreenCategories(
         }
         if (viewModel.openAlertDialog) {
             DialogWithEditField(
-                onDismissRequest = { viewModel.openDialog() },
+                onDismissRequest = {
+                    viewModel.openDialog()
+                    viewModel.updateEnter("")
+                                   },
                 onConfirmation = {
                     if (viewModel.enter.replace(" ", "").isEmpty()) {
                         Toast.makeText(context, "Название не может быть пустым", Toast.LENGTH_LONG)
@@ -121,6 +143,7 @@ fun ScreenCategories(
                             ),
                             context
                         )
+                        viewModel.updateEnter("")
                     }
                 },
                 viewModel = viewModel,

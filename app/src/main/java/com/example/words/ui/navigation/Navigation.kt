@@ -75,15 +75,17 @@ fun Navigation(
                     context
                 )
             }
-            composable(ScreenRoute.ScreenWords.name + "/{categories.id}/{categories.category_name}") {backStackEntry ->
+            composable(ScreenRoute.ScreenWords.name + "/{categories.id}/{categories.category_name}/{categories.owner_id}") {backStackEntry ->
                 val categoryId = backStackEntry.arguments?.getString("categories.id")
                 val categoryName = backStackEntry.arguments?.getString("categories.category_name")
+                val owner_id = backStackEntry.arguments?.getString("categories.owner_id")
                 Log.d("MyLog", categoryId.toString())
                 ScreenWords(
                     viewModel = viewModelWords,
                     viewModelCategories = viewModelCategories,
                     categoryId = categoryId?.toInt() ?: 0,
                     categoryName = categoryName ?: "",
+                    ownerId = owner_id?.toInt() ?: 0,
                     navController = navController,
                     context = context
                 )
@@ -93,6 +95,7 @@ fun Navigation(
                     viewModelLearning = viewModelLearning,
                     viewModelCategories = viewModelCategories,
                     viewModelWords = viewModelWords,
+                    navController = navController,
                     context = context
                 )
             }

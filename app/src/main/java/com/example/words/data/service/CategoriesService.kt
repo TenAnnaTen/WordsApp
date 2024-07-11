@@ -28,4 +28,10 @@ interface CategoriesService {
 
     @PUT("category/{category_id}")
     suspend fun updateNameCategory(@Body request: Categories, @Path("category_id") categoryId: Int): Response<Categories>
+
+    @POST("category/{category_id}/user/{user_id}")
+    suspend fun addUserByCategory(@Path("category_id") categoryId: Int, @Path("user_id") userId: Int): Response<Int>
+
+    @DELETE("category/{category_id}/user/{user_id}")
+    suspend fun deleteUserByCategory(@Path("category_id") categoryId: Int, @Path("user_id") userId: Int): Response<Int>
 }

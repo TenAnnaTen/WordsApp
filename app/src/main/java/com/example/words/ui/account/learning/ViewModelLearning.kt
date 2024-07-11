@@ -38,18 +38,20 @@ class ViewModelLearning : ViewModel() {
 
         viewModelScope.launch {
             try {
-                viewModelCategories.getPublicCategories()
-                val categoriesList = mutableListOf<Categories>().apply {
-                    addAll(viewModelCategories.uiState.value.list)
-                    addAll(viewModelCategories.uiState.value.list2)
-                }
-                if (categoriesList.isNotEmpty()) {
-                    changeWord(categoriesList, viewModelWords, context)
+                withContext(Dispatchers.IO) {
+                    viewModelCategories.getPublicCategories()
+                    val categoriesList = mutableListOf<Categories>().apply {
+                        addAll(viewModelCategories.uiState.value.list)
+                        addAll(viewModelCategories.uiState.value.list2)
+                    }
+                    if (categoriesList.isNotEmpty()) {
+                        changeWord(categoriesList, viewModelWords, context)
+                    }
                 }
             } catch (e: Exception) {
-//                withContext(Dispatchers.Main) {
-//                    Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
-//                }
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
+                }
                 Log.e("MyLog", "Error selecting word: ", e)
             }
         }
@@ -60,17 +62,20 @@ class ViewModelLearning : ViewModel() {
         viewModelWords: ViewModelWords,
         context: Context
     ) {
-        val categoryId = listChange.random().id
-        viewModelWords.getWordsOfCategory(categoryId = categoryId!!, context)
-        if (viewModelWords.wordsListResponse.isNotEmpty()) {
-            var a: Word
-            do {
-                a = viewModelWords.wordsListResponse.random()
-            } while (_uiState.value.word.id == a.id && viewModelWords.wordsListResponse.size > 1)
+        withContext(Dispatchers.IO) {
+            val categoryId = listChange.random().id
+            viewModelWords.getWordsOfCategory(categoryId = categoryId!!, context)
+            if (viewModelWords.wordsListResponse.isNotEmpty()) {
+                var a: Word
+                do {
+                    a = viewModelWords.wordsListResponse.random()
+                } while (uiState.value.word.id == a.id && viewModelWords.wordsListResponse.size > 1)
 
-            _uiState.value = ScreenLearningUiState(a)
-            Log.d("MyLog", _uiState.value.toString())
-            hasWordSelected = true
+                withContext(Dispatchers.Main) {
+                    _uiState.value = ScreenLearningUiState(a)
+                    hasWordSelected = true
+                }
+            }
         }
     }
 

@@ -31,6 +31,9 @@ class ViewModelWords: ViewModel() {
     var dialog by mutableStateOf(false)
         private set
 
+    var dialogByUsersAdd by mutableStateOf(false)
+        private set
+
     var mainLanguage by mutableStateOf("")
         private set
 
@@ -39,6 +42,8 @@ class ViewModelWords: ViewModel() {
 
     var transcription by mutableStateOf("")
         private set
+
+    var selectedTabIndex by mutableStateOf(false)
     fun getWordsOfCategory(categoryId: Int, context: Context) {
         viewModelScope.launch {
             try {
@@ -122,6 +127,13 @@ class ViewModelWords: ViewModel() {
 
     fun openCloseDialog(){
         dialog = !dialog
+    }
+    fun openCloseDialogByUsers(){
+        dialogByUsersAdd = !dialogByUsersAdd
+    }
+
+    fun switchList(){
+        selectedTabIndex = !selectedTabIndex
     }
 
 }

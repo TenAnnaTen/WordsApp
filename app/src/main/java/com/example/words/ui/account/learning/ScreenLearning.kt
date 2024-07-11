@@ -24,17 +24,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.words.R
 import com.example.words.ui.account.categories.ViewModelCategories
 import com.example.words.ui.account.words.ViewModelWords
+import com.example.words.ui.navigation.ScreenRoute
+import org.w3c.dom.Text
 
 @Composable
 fun ScreenLearning(
     viewModelLearning: ViewModelLearning,
     viewModelCategories: ViewModelCategories,
     viewModelWords: ViewModelWords,
+    navController: NavHostController,
     context: Context
 ){
 
@@ -67,6 +74,7 @@ fun ScreenLearning(
             viewModelLearning,
             viewModelCategories,
             viewModelWords,
+            navController,
             context
         )
     }
@@ -77,6 +85,7 @@ private fun FlippableCard(
     viewModelLearning: ViewModelLearning,
     viewModelCategories: ViewModelCategories,
     viewModelWords: ViewModelWords,
+    navController: NavHostController,
     context: Context
 ) {
 
@@ -111,6 +120,24 @@ private fun FlippableCard(
                 BackSide(
                     text1 = uiState.value.word.second_language!!,
                     text2 = uiState.value.word.transcription!!
+                )
+            }
+        } else {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize()
+            ) {
+                Text(
+                    text = stringResource(id = R.string.noneWord),
+                    fontSize = 18.sp
+                )
+                Text(
+                    text = stringResource(id = R.string.noneWordAdd),
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.clickable {
+                        navController.navigate(ScreenRoute.ScreenCategories.name)
+                    }
                 )
             }
         }

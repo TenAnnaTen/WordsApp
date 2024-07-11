@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.words.data.model.Categories
+import com.example.words.data.model.User
 import com.example.words.data.model.Word
 import com.example.words.ui.account.categories.ViewModelCategories
 import com.example.words.ui.account.words.ViewModelWords
@@ -48,13 +49,31 @@ fun ListWithWords(
 fun ListWithPublicCategories(
     categoriesList: MutableList<Categories>,
     viewModel: ViewModelCategories,
+    context: Context,
     navController: NavHostController
 ) {
     LazyColumn(
         contentPadding = PaddingValues(horizontal = 5.dp, vertical = 8.dp)
     ){
         itemsIndexed(items = categoriesList){index, item ->
-            PublicCategories(categories = item, viewModel, navController)
+            PublicCategories(categories = item, viewModel, context, navController)
+        }
+    }
+}
+
+@Composable
+fun ListWithUsers(
+    usersList: MutableList<User>,
+    ownerId: Int,
+    categoryId: Int,
+    viewModel: ViewModelCategories,
+    context: Context
+) {
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 5.dp, vertical = 8.dp)
+    ){
+        itemsIndexed(items = usersList){index, item ->
+            UsersCard(user = item, ownerId, categoryId, viewModel = viewModel, context = context)
         }
     }
 }

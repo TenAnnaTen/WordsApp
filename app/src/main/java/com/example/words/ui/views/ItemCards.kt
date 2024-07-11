@@ -46,7 +46,9 @@ import com.example.compose.inversePrimaryLight
 import com.example.compose.primaryLight
 import com.example.words.R
 import com.example.words.data.model.Categories
+import com.example.words.data.model.User
 import com.example.words.data.model.Word
+import com.example.words.data.storage.AccountStorage
 import com.example.words.ui.account.categories.ViewModelCategories
 import com.example.words.ui.account.words.ViewModelWords
 import com.example.words.ui.navigation.AlertDialogExample
@@ -68,7 +70,7 @@ fun MyCategories(
             .width(500.dp)
             .padding(10.dp)
             .clickable {
-                navController.navigate("${ScreenRoute.ScreenWords.name}/${categories.id}/${categories.category_name}")
+                navController.navigate("${ScreenRoute.ScreenWords.name}/${categories.id}/${categories.category_name}/${categories.owner_id}")
             }
     ) {
         Row(
@@ -128,11 +130,13 @@ fun MyCategories(
 fun PublicCategories(
     categories: Categories,
     viewModel: ViewModelCategories,
+    context: Context,
     navController: NavHostController
 ) {
 
     val openAlertDialog = remember { mutableStateOf(false) }
     val nameOwner = viewModel.nameOwner[categories.id]
+    val accountStorage = AccountStorage()
 
     Card(
         modifier = Modifier
@@ -140,7 +144,7 @@ fun PublicCategories(
             .width(500.dp)
             .padding(10.dp)
             .clickable {
-                navController.navigate("${ScreenRoute.ScreenWords.name}/${categories.id}/${categories.category_name}")
+                navController.navigate("${ScreenRoute.ScreenWords.name}/${categories.id}/${categories.category_name}/${categories.owner_id}")
             }
     ) {
         Row(
@@ -199,6 +203,11 @@ fun PublicCategories(
             onDismissRequest = { openAlertDialog.value = false },
             onConfirmation = {
                 openAlertDialog.value = false
+                viewModel.delUserByCategory(
+                    categories.id!!,
+                    accountStorage.getUserId(),
+                    context
+                )
             },
             dialogTitle = stringResource(id = R.string.exitAlert)
         )
@@ -254,6 +263,126 @@ fun WordsCard(
                 }
             }
         }
+    }
+}
+
+@Composable
+fun UsersCard(
+    user: User,
+    ownerId: Int,
+    categoryId: Int,
+    viewModel: ViewModelCategories,
+    context: Context
+) {
+
+    val openAlertDialog = remember { mutableStateOf(false) }
+    val accountStorage = AccountStorage()
+
+    Card(
+        modifier = Modifier
+            .height(140.dp)
+            .width(500.dp)
+            .padding(10.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+            ) {
+                Text(
+                    text = user.name.toString(),
+                    fontSize = 22.sp,
+                    modifier = Modifier
+                        .width(200.dp)
+                        .padding(start = 20.dp)
+                        .height(75.dp)
+                )
+                Text(
+                    text = user.id.toString(),
+                    fontSize = 18.sp,
+                    modifier = Modifier
+                        .width(200.dp)
+                        .padding(start = 20.dp)
+                        .height(75.dp)
+                )
+            }
+            Spacer(modifier = Modifier.width(45.dp))
+            if (user.id != accountStorage.getUserId() && ownerId == accountStorage.getUserId()) {
+                Column(
+                    verticalArrangement = Arrangement.Bottom,
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    Button(
+                        onClick = {
+                            openAlertDialog.value = true
+                        },
+                        modifier = Modifier
+                            .height(37.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.delete),
+                            fontSize = 16.sp,
+                            modifier = Modifier
+                                .align(Alignment.Bottom)
+                        )
+                    }
+                }
+            } else if (user.id == accountStorage.getUserId() && ownerId != accountStorage.getUserId()) {
+                Column(
+                    verticalArrangement = Arrangement.Bottom,
+                    modifier = Modifier.fillMaxHeight()
+                ) {
+                    Button(
+                        onClick = {
+                            openAlertDialog.value = true
+                        },
+                        modifier = Modifier
+                            .height(37.dp)
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.exit),
+                            fontSize = 16.sp,
+                            modifier = Modifier
+                                .align(Alignment.Bottom)
+                        )
+                    }
+                }
+            }
+        }
+    }
+    if (openAlertDialog.value &&
+        user.id != accountStorage.getUserId() &&
+        ownerId == accountStorage.getUserId()) {
+        AlertDialogExample(
+            onDismissRequest = { openAlertDialog.value = false },
+            onConfirmation = {
+                openAlertDialog.value = false
+                viewModel.delUserByCategory(
+                    categoryId,
+                    user.id!!,
+                    context
+                )
+            },
+            dialogTitle = stringResource(id = R.string.delUser)
+        )
+    } else if (openAlertDialog.value &&
+        user.id == accountStorage.getUserId() &&
+        ownerId != accountStorage.getUserId()) {
+        AlertDialogExample(
+            onDismissRequest = { openAlertDialog.value = false },
+            onConfirmation = {
+                openAlertDialog.value = false
+                viewModel.delUserByCategory(
+                    categoryId,
+                    accountStorage.getUserId(),
+                    context
+                )
+            },
+            dialogTitle = stringResource(id = R.string.exitAlert)
+        )
     }
 }
 

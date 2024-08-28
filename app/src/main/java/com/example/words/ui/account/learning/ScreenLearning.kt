@@ -1,6 +1,7 @@
 package com.example.words.ui.account.learning
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.clickable
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
@@ -30,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.compose.primaryLight
 import com.example.words.R
 import com.example.words.ui.account.categories.ViewModelCategories
 import com.example.words.ui.account.words.ViewModelWords
@@ -102,12 +105,14 @@ private fun FlippableCard(
         context
     )
 
+    Log.d("MyLog", uiState.value.word.toString())
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .width(300.dp)
             .height(200.dp)
-            .clickable { viewModelLearning.updateIsFlipped() }
+            .clickable { if (uiState.value.word.main_language != null) viewModelLearning.updateIsFlipped() }
             .graphicsLayer {
                 rotationY = rotation
                 cameraDistance = 12f * density
@@ -123,6 +128,7 @@ private fun FlippableCard(
                 )
             }
         } else {
+//            FrontSide(text = stringResource(id = R.string.noneWord))
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize()
@@ -131,9 +137,11 @@ private fun FlippableCard(
                     text = stringResource(id = R.string.noneWord),
                     fontSize = 18.sp
                 )
+                Spacer(modifier = Modifier.height(15.dp))
                 Text(
                     text = stringResource(id = R.string.noneWordAdd),
                     fontSize = 14.sp,
+                    color = primaryLight,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.clickable {
                         navController.navigate(ScreenRoute.ScreenCategories.name)
@@ -141,7 +149,6 @@ private fun FlippableCard(
                 )
             }
         }
-
     }
 
 }

@@ -2,6 +2,7 @@ package com.example.words.ui.account.categories
 
 import android.content.Context
 import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,19 +11,25 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.compose.primaryLight
 import com.example.words.R
 import com.example.words.data.model.Categories
 import com.example.words.ui.navigation.DialogWithEditField
@@ -46,12 +53,23 @@ fun ScreenCategories(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = stringResource(id = R.string.categories_title),
-            fontSize = 26.sp,
-            modifier = modifier
-                .padding(vertical = 20.dp)
-        )
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .background(
+                    primaryLight,
+                    shape = RoundedCornerShape(bottomStart = 40.dp, bottomEnd = 40.dp)
+                )
+                .fillMaxWidth()
+        ){
+            Text(
+                text = stringResource(id = R.string.categories_title),
+                fontSize = 24.sp,
+                color = Color.White,
+                modifier = modifier
+                    .padding(vertical = 20.dp)
+            )
+        }
         TabRowScreen(
             tabTitles = mutableListOf(
                 stringResource(id = R.string.my_categories),
@@ -88,6 +106,9 @@ fun ScreenCategories(
                 onClick = {
                     viewModel.openDialog()
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = primaryLight
+                )
             ) {
                 Row {
                     Icon(
@@ -156,5 +177,5 @@ fun ScreenCategories(
 //@Preview(showBackground = true)
 //@Composable
 //fun GreetingPreview() {
-//    ScreenCategories()
+//    ScreenCategories(Modifier, ViewModelCategories(), rememberNavController())
 //}

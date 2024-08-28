@@ -16,6 +16,7 @@ import com.example.words.data.storage.AccountStorage
 import com.example.words.ui.navigation.ScreenRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class ScreenSettingsViewModel: ViewModel() {
@@ -28,6 +29,9 @@ class ScreenSettingsViewModel: ViewModel() {
 
     private var _uiStateColor = MutableStateFlow(colorState(dark = false))
     val uiStateColor = _uiStateColor.asStateFlow()
+
+    private var _uiState = MutableStateFlow(ScreenSettingsUiState())
+    val uiState = _uiState.asStateFlow()
 
     val accountRepository = AccountRepository()
     val accountStorage = AccountStorage()
@@ -51,28 +55,25 @@ class ScreenSettingsViewModel: ViewModel() {
         }
     }
 
-//    fun updateUser(name: String) {
-//        viewModelScope.launch {
-//            try {
-//                val response = accountRepository.getUserById(accountStorage.getUserId())
-//                Log.d("MyLog", response.body().toString())
-//                if (response.isSuccessful) {
-//                    Log.d("MyLog", response.body()?.username.toString())
-//                    Log.d("MyLog", response.body()?.password.toString())
-//                    accountRepository.updateUser(
-//                        User(
-//                            username = response.body()?.username,
-//                            name = name,
-//                            password = response.body()?.password
-//                        ),
-//                        accountStorage.getUserId()
-//                    )
-//                }
-//            } catch (e: Exception) {
-//                Log.d("MyLog", e.toString())
-//            }
-//        }
-//    }
+    fun updateUser(name: String) {
+        viewModelScope.launch {
+            try {
+                val response = accountRepository.updateUser(
+                    User(
+                        name = name
+                    ),
+                    accountStorage.getUserId()
+                )
+                if (response.isSuccessful) {
+                    _uiState.value.name = response.body()?.name!!
+                } else {
+                    Log.d("MyLog", response.toString())
+                }
+            } catch (e: Exception) {
+                Log.d("MyLog", e.toString())
+            }
+        }
+    }
 
     fun deleteAccount(navController: NavHostController, context: Context) {
         viewModelScope.launch {
@@ -83,6 +84,23 @@ class ScreenSettingsViewModel: ViewModel() {
             } catch (e: Exception) {
                 Log.d("MyLog", e.toString())
                 Toast.makeText(context, "Ошибка сети", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+    fun getUserById(userId: Int){
+        viewModelScope.launch {
+            try {
+                val response = accountRepository.getUserById(userId)
+                if (response.isSuccessful) {
+                    val name = response.body()?.name
+//                    Log.d("MyLog", response.body()?.name.toString())
+                    _uiState.update { it.copy(name = name!!) }
+                } else {
+                    Log.d("MyLog", "Error: ${response.errorBody()}")
+                }
+            } catch (e: Exception) {
+                Log.d("MyLog", e.toString())
             }
         }
     }

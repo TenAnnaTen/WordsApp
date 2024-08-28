@@ -20,7 +20,7 @@ interface AccountService {
     suspend fun getUserById(@Path("user_id") userId: Int): Response<User>
 
     @PUT("user/{user_id}")
-    suspend fun updateUser(@Body request: User, @Path("user_id") userId: Int)
+    suspend fun updateUser(@Body request: User, @Path("user_id") userId: Int): Response<User>
 
     @DELETE("user/{user_id}")
     suspend fun deleteAccount(@Path("user_id") userId: Int)

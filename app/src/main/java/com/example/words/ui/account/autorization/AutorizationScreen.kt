@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -27,12 +28,16 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.example.compose.primaryLight
 import com.example.words.R
 import com.example.words.data.model.User
 import com.example.words.ui.navigation.ScreenRoute
+import com.example.words.ui.views.CirclesAppName
 
 @Composable
 fun SignIn(
@@ -46,10 +51,7 @@ fun SignIn(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
-        Text(
-            text = stringResource(id = R.string.app_name),
-            fontSize = 30.sp
-        )
+        CirclesAppName(text = stringResource(id = R.string.app_name), color = primaryLight)
         Spacer(
             modifier = Modifier
                 .height(100.dp)
@@ -98,9 +100,13 @@ fun SignIn(
                     )
                 }
             },
+            colors = ButtonDefaults.buttonColors(containerColor = primaryLight),
             modifier = Modifier.width(340.dp)
         ) {
-            Text(text = stringResource(id = R.string.loginIn))
+            Text(
+                text = stringResource(id = R.string.loginIn),
+                fontSize = 16.sp
+            )
         }
         Text(
             text = stringResource(id = R.string.loginOut),
@@ -123,10 +129,7 @@ fun SignUp(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ) {
-        Text(
-            text = stringResource(id = R.string.app_name),
-            fontSize = 30.sp
-        )
+        CirclesAppName(text = stringResource(id = R.string.app_name), color = primaryLight)
         Spacer(
             modifier = Modifier
                 .height(100.dp)
@@ -136,8 +139,9 @@ fun SignUp(
             label = R.string.login,
             onChange = { viewModel.updateEnterUsername(it) },
             keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Next
-        )
+            imeAction = ImeAction.Next,
+
+            )
         Spacer(
             modifier = Modifier
                 .height(20.dp)
@@ -168,23 +172,30 @@ fun SignUp(
             modifier = Modifier
                 .height(100.dp)
         )
-        Button(onClick = {
-            if (viewModel.username.replace(" ", "").isEmpty() || viewModel.name.replace(" ", "")
-                    .isEmpty() || viewModel.password.replace(" ", "").isEmpty()
-            ) {
-                Toast.makeText(context, "Заполните все поля", Toast.LENGTH_LONG).show()
-            } else {
-                viewModel.signUp(
-                    User(
-                        username = viewModel.username,
-                        name = viewModel.name,
-                        password = viewModel.password
-                    ),
-                    context
-                )
-            }
-        }) {
-            Text(text = stringResource(id = R.string.loginOut))
+        Button(
+            onClick = {
+                if (viewModel.username.replace(" ", "").isEmpty() || viewModel.name.replace(" ", "")
+                        .isEmpty() || viewModel.password.replace(" ", "").isEmpty()
+                ) {
+                    Toast.makeText(context, "Заполните все поля", Toast.LENGTH_LONG).show()
+                } else {
+                    viewModel.signUp(
+                        User(
+                            username = viewModel.username,
+                            name = viewModel.name,
+                            password = viewModel.password
+                        ),
+                        context
+                    )
+                }
+            },
+            colors = ButtonDefaults.buttonColors(containerColor = primaryLight),
+            modifier = Modifier.width(340.dp)
+        ) {
+            Text(
+                text = stringResource(id = R.string.loginOut),
+                fontSize = 16.sp
+            )
         }
         Text(
             text = stringResource(id = R.string.loginIn),
@@ -214,7 +225,8 @@ private fun EditText(
             keyboardType = keyboardType,
             imeAction = imeAction
         ),
-        modifier = Modifier.width(340.dp)
+        modifier = Modifier
+            .width(340.dp)
     )
 }
 
@@ -264,7 +276,9 @@ private fun EditTextPassword(
 //@Preview(showBackground = true)
 //@Composable
 //fun GreetingPreview() {
-//    SignUp(navController = rememberNavController(), viewModel = ViewModelAutorization(
-//        rememberNavController())
+//    SignIn(
+//        navController = rememberNavController(), viewModel = ViewModelAutorization(
+//            rememberNavController()
+//        )
 //    )
 //}

@@ -98,23 +98,6 @@ class ViewModelCategories : ViewModel() {
         }
     }
 
-    fun getUserById(userId: Int){
-        viewModelScope.launch {
-            try {
-                val response = accountRepository.getUserById(userId)
-                if (response.isSuccessful) {
-                    val ownerName = response.body()?.name
-                    Log.d("MyLog", response.body()?.name.toString())
-                    _state.update { it.copy(name = ownerName) }
-                } else {
-                    Log.d("MyLog", "Error: ${response.errorBody()}")
-                }
-            } catch (e: Exception) {
-                Log.d("MyLog", e.toString())
-            }
-        }
-    }
-
     fun delCategory(categoryId: Int, context: Context) {
         viewModelScope.launch {
             try {

@@ -13,6 +13,7 @@ import com.example.words.ui.account.words.ViewModelWords
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -72,7 +73,7 @@ class ViewModelLearning : ViewModel() {
                 } while (uiState.value.word.id == a.id && viewModelWords.wordsListResponse.size > 1)
 
                 withContext(Dispatchers.Main) {
-                    _uiState.value = ScreenLearningUiState(a)
+                    _uiState.update { it.copy(word = a) }
                     hasWordSelected = true
                 }
             }

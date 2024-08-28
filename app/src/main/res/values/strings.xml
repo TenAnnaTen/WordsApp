@@ -29,7 +29,7 @@
     <string name="light">Светлая тема</string>
     <string name="Dark">Темная тема</string>
     <string name="account">Настройки аккаунта</string>
-    <string name="accountChange">Изменить имя</string>
+    <string name="accountChange">Изменить имя пользователя</string>
     <string name="accountDelete">Удалить профиль</string>
     <string name="accountExit">Выйти из профиля</string>
     <string name="nameChange">Введите новое имя пользователя</string>

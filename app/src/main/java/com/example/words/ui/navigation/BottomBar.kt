@@ -1,5 +1,6 @@
 package com.example.words.ui.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Shapes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -27,6 +29,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.compose.primaryDark
+import com.example.compose.primaryLight
+import com.example.compose.secondaryDark
+import com.example.compose.secondaryLight
 import com.example.words.ui.account.learning.ScreenLearning
 import com.example.words.ui.account.learning.ViewModelLearning
 
@@ -47,7 +53,7 @@ fun BottomNavigation(
     ) {
         Box(
             modifier = Modifier
-                .border(width = 2.dp, color = Color.Black, RoundedCornerShape(10.dp))
+                .border(width = 3.dp, color = Color.Black, RoundedCornerShape(10.dp))
         ) {
             NavigationBar(
                 containerColor = Color.Transparent,
@@ -67,21 +73,25 @@ fun BottomNavigation(
                             Box(
                                 modifier = Modifier
                                     .border(
-                                        width = 2.dp,
-                                        color = Color.Black,
+                                        width = 3.dp,
+                                        color = if (currentRoute == item.route) primaryDark else Color.Black,
                                         RoundedCornerShape(10.dp)
                                     )
-                                    .padding(8.dp)
                             ) {
                                 Icon(
                                     painter = painterResource(id = item.iconId),
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(50.dp)
+                                        .padding(8.dp)
                                 )
                             }
 
-                        }
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = secondaryDark,
+//                            indicatorColor = Color.Transparent
+                        )
                     )
                 }
             }

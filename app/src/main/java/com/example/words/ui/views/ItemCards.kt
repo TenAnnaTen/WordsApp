@@ -7,6 +7,7 @@ import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
@@ -43,7 +45,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.compose.inversePrimaryLight
+import com.example.compose.primaryDark
 import com.example.compose.primaryLight
+import com.example.compose.tertiaryLight
 import com.example.words.R
 import com.example.words.data.model.Categories
 import com.example.words.data.model.User
@@ -72,6 +76,7 @@ fun MyCategories(
             .clickable {
                 navController.navigate("${ScreenRoute.ScreenWords.name}/${categories.id}/${categories.category_name}/${categories.owner_id}")
             }
+//            .border(width = 2.dp, color = primaryLight, RoundedCornerShape(10.dp))
     ) {
         Row(
             modifier = Modifier
@@ -167,7 +172,7 @@ fun PublicCategories(
                     viewModel.getNameOwner(categories.owner_id, categories.id)
                     if (nameOwner != null) {
                         Text(
-                            text = nameOwner,
+                            text = "Автор: $nameOwner",
                             fontSize = 18.sp,
                             modifier = Modifier
                                 .width(200.dp)
